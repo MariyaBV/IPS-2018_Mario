@@ -1,6 +1,11 @@
 import {KeyCode} from './keyCode.js';
 //import config from './objects.json';
 
+const FLOAT_EQUAL_PRESCISION = 0.01;
+function isFloatEqual(f1, f2) {
+    return Math.abs(f1 - f2) <= FLOAT_EQUAL_PRESCISION;
+}
+
 const  BRICK_LEDGE = [
     [9, 12, 4],
     [33, 34, 8],
@@ -13,8 +18,7 @@ const  BRICK_LEDGE = [
     [87, 88, 8],
     [87, 88, 7],
     [90, 92, 8],
-    [90, 91, 7],
-    [100, 101, 8]
+    [90, 91, 7]
 ];
 
 const BRICK_LEDGE_ONES = [
@@ -38,9 +42,10 @@ const BRICK_LEDGE_ONES = [
     [74, 5],
     [84, 8],
     [84, 7],
-    [93, 6],
+    [90, 6],
     [96, 8],
-    [96, 7]
+    [96, 7],
+    [100, 8]
 ];
 
 const BOX = [
@@ -75,7 +80,14 @@ const MASHROOM = [
     [94, 8]
 ];
 
-const FLAG = [100.5];
+const BALL = [100, 3];
+
+const STAFF = [
+    [100, 7],
+    [100, 6],
+    [100, 5],
+    [100, 4]
+];
 
 const EARTH = [1, 106, 9];
 
@@ -89,8 +101,9 @@ const MARIO_SIZE = 50;
 const FREE_FALL_ACCELERATION = new Vec2(0, 20);
 const scrollSum = 0;
 const dx = 10;
+const METER_IN_PX = 300;
 
-const ANTISPEED_VALUE = 40;
+const ANTISPEED_VALUE = 48;
 const AIR_DECELERATION = 5;
 
 function Vec2(x, y) {
@@ -132,26 +145,6 @@ const Direction = {
 }
 Object.freeze(Direction);
 
-function KeyMap() {
-    this._map = {};
-
-    this.onKeyDown = function(keyCode) {
-        this._map[keyCode] = true;
-    }
-
-    this.onKeyUp = function(keyCode) {
-        delete this._map[keyCode];
-    }
-
-    this.isPressed = function(keyCode) {
-        return Boolean(this._map[keyCode]);
-    }
-
-    Object.freeze(this);
-}
-
-let map = {x: 0, y: 0, width: 5250, height: 500};
-
 let earthImg = new Image();
 earthImg.src = "img/earth.png";
 let marioImg = new Image();
@@ -163,7 +156,11 @@ boxImg.src = "img/box.png";
 let coinImg = new Image();
 coinImg.src = "img/coin.png";
 let mushroomImg = new Image();
-mushroomImg.src = "img/mashroom.png"
+mushroomImg.src = "img/mashroom.png";
+let ballImg = new Image();
+ballImg.src = "img/ball.png";
+let staffImg = new Image();
+staffImg.src = "img/staff.png";
 
 function Earth({
     startX,
@@ -171,6 +168,12 @@ function Earth({
 }) {
     this.x = startX;
     this.y = startY;
+}
+
+function Sky({
+    startX,
+}) {
+    this.x = startX;
 }
 
 function Mario({
@@ -188,23 +191,42 @@ function Mario({
     }
 }
 
-Mario.MAX_SPEED = 100; // для максимальной скорости
+Mario.MAX_SPEED = 140; // для максимальной скорости
 Mario.MIN_SPEED = 0; // для минимальной скорости
+
+
+let keyUp = false;
+function KeyMap(mario) {
+    this._map = {};
+    this.onKeyDown = function(keyCode) {
+        if (keyUp && (mario.speed.length() != 0)){
+            delete this._map[keyCode];
+        } else {
+            this._map[keyCode] = true;
+            keyUp = false;
+        }
+    }
+
+    this.onKeyUp = function(keyCode) {
+        delete this._map[keyCode];
+        keyUp = true;
+    }
+
+    this.isPressed = function(keyCode) {
+        return Boolean(this._map[keyCode]);
+    }
+
+    Object.freeze(this);
+}
 
 
 function drawEarth(earth, ctx, boxWidth, boxHeight) {
     for (earth.x = 0; earth.x <= (boxWidth - EARTH_SQUARE_WIDTH); earth.x+=EARTH_SQUARE_WIDTH)
         ctx.drawImage(earthImg, earth.x, earth.y);
-
-    // for (const coordinate of EARTH){
-    //     for (let i = coordinate[0]; i <= coordinate[1]; i++){
-    //         ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
-    //     }
-    // }
 }
 
 function drawMario({ctx, mario, boxWidth, boxHeight}) {
-    ctx.drawImage(marioImg, mario.position.x, mario.position.y, MARIO_SIZE, MARIO_SIZE);
+    ctx.drawImage(marioImg, mario.position.x, mario.position.y , MARIO_SIZE, MARIO_SIZE);
 }
 
 function moveMario({mario, dt}) {
@@ -224,7 +246,7 @@ function applyFrictionalForce({mario, dt, boxHeight}) {
     } else {
         const antiForce = mario.speed.normalize().multiplyScalar(-1 * ANTISPEED_VALUE);
         if (antiForce.multiplyScalar(dt).length() >= mario.speed.length()) {
-            mario.speed = new Vec2(0, 0); 
+            mario.speed = new Vec2(0, 0);
         }
         else {
             mario.applyForce(antiForce, dt);
@@ -232,9 +254,37 @@ function applyFrictionalForce({mario, dt, boxHeight}) {
     }
 }
 
-function drawMap(mario, ctx){
-    const leftEdge = mario.position.x / 50 - dx;
-    const rightEdge = mario.position.x / 50 + dx;
+const map = {
+    cols:  106, 
+    tsize: 50
+};
+
+function Window(width, height) {
+    this.x = 0;
+    this.y = 0;
+    this.width = width;
+    this.height = height;
+    this.maxX = map.cols * map.tsize - width;
+}
+
+function moveWindow (mario, window, dt) {
+    moveMario({mario, dt});
+    if (mario.position.x / 50 >= 10){
+        window.x = -mario.position.x + window.width.width / 2;
+    } else {
+        window.x = 0;
+    }
+};
+
+function drawMap(mario, ctx, window){
+    let leftEdge, rightEdge;
+    if (mario.position.x / 50 <= 10) {
+        leftEdge = 0;
+        rightEdge = window.width.width;
+    } else {
+        leftEdge = mario.position.x / 50 - dx;
+        rightEdge = mario.position.x / 50 + dx;
+    }
     //$.getJSON( "js/objects.json", function(data) {
         for (const coordinate of BRICK_LEDGE){
             if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
@@ -267,68 +317,42 @@ function drawMap(mario, ctx){
                 ctx.drawImage(mushroomImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
+
+        for (const coordinate of BALL){
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+                console.log("ball");
+                ctx.drawImage(ballImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
+            }
+        }
+
+        for (const coordinate of STAFF){
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+                ctx.drawImage(staffImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
+            }
+        }
     //})
 }
 
-const canvasStartCoordinate = 0;
-
-function moveMap(mario, ctx){
-    // ctx.save();
-    // //const dxCtx = 5;
-    // const marioPositionX = mario.position.x - 500;
-    // //console.log(marioPositionX, canvasStartCoordinate);
-    // if (canvasStartCoordinate !== marioPositionX) {
-    //     const canvasStartCoordinate = mario.position.x - 500;
-    //     console.log(marioPositionX, canvasStartCoordinate);
-    //     ctx.translate(-canvasStartCoordinate, 0);
-    // } else if (canvasStartCoordinate == marioPositionX) {
-    //     ctx.restore();
-    // }
-    
-    const marioPositionX = mario.position.x / 50;
-    const rightEdge = marioPositionX + dx;
-    const leftEdge = marioPositionX - dx;
-    let marioPositionNew = 0;
-    //ctx.translate(marioPositionNew, 0);
-    if ((marioPositionX > 11) && (marioPositionNew !== marioPositionX - 11)) { 
-        marioPositionNew += marioPositionX - 11;
-        console.log(marioPositionNew);
-        if (marioPositionNew > 0) {
-            //ctx.transform(1, 0, 0, 1, -1, 0);
-            ctx.translate(-marioPositionNew, 0);
-            console.log('marioPositionNew > 0 ', marioPositionNew, marioPositionX);
-        } else if (marioPositionNew < 0) {
-            //ctx.transform(1, 0, 0, 1, 1, 0);
-            ctx.translate(marioPositionNew, 0);
-            console.log('marioPositionNew < 0 ', marioPositionNew, marioPositionX);
-        }
-        
-    //     if ((leftEdge <= 10) && (leftEdge >= 1)) {
-    //         ctx.transform(1, 0, 0, 1, 1, 0);
-    //         console.log(leftEdge, " left <=5 right ", rightEdge);
-    //     } else if ((rightEdge >= 12) && (rightEdge <= 21)) {
-    //         ctx.transform(1, 0, 0, 1, 1, 0);
-    //         marioPositionX = 11;
-    //         console.log(leftEdge, " left >=5 right ", rightEdge);
-    //     } else {
-    //         ctx.setTransform(1, 0, 0, -1, 0, 0);
-    //     }
+function drawWindow(window, ctx, mario){
+    if (window.x !== 0){
+        ctx.translate(window.x, 0);
     }
+
+    drawMap(mario, ctx, window);
 }
 
-function update({earth, mario, boxWidth, boxHeight, dt, ctx}) {
+function update({earth, mario, boxWidth, boxHeight, dt, ctx, window}) {
     leftScreenCollision(mario);
-    topScreenCollision(mario);
-    bottomScreenCollision(mario, earth);
+    topScreenCollision(mario, dt);
+    bottomScreenCollision(mario, earth, boxHeight);
     applyFrictionalForce({mario, dt, boxHeight});
-    moveMario({mario, dt});
-    moveMap(mario, ctx);
+    moveWindow(mario, window, dt);
 }
 
 function processKeyMapForMario({mario, keyMap, dt}) {
-    const MOVE_SPEED = 50;
+    const MOVE_SPEED = 100;
 
-    let wasProcessed = true;
+    let wasProcessed = false;
     let directionForce = Vec2.ZERO;
 
     if (keyMap.isPressed(KeyCode.LEFT_ARROW)) {
@@ -340,8 +364,9 @@ function processKeyMapForMario({mario, keyMap, dt}) {
         wasProcessed = true;
     }
     if (keyMap.isPressed(KeyCode.UP_ARROW)) {
-        directionForce = directionForce.add(Direction.UP);
-        wasProcessed = true;
+            directionForce = directionForce.add(Direction.UP);
+            wasProcessed = true;
+            mario.jump = true; 
     }
     if (keyMap.isPressed(KeyCode.DOWN_ARROW)) {
         directionForce = directionForce.add(Direction.DOWN);
@@ -359,50 +384,42 @@ function processKeyMap({mario, keyMap, dt}) {
     processKeyMapForMario({mario, keyMap, dt});
 }
 
-function redraw({earth, mario, boxWidth, boxHeight, ctx}) {
-    drawSky(ctx, boxWidth, boxHeight);
-    drawEarth(earth, ctx, boxWidth, boxHeight);
-    drawMap(mario, ctx);
-    drawMario({ctx, mario, boxWidth, boxHeight});
-}
-
-function drawSky(ctx, boxWidth, boxHeight) {    
+function drawSky(ctx, boxWidth, boxHeight, sky) {    
     ctx.fillStyle = '#3c78d8';
-    ctx.fillRect(0, 0, boxWidth, boxHeight);
+    ctx.fillRect(sky.x, 0, boxWidth, boxHeight);
 }
 
-function scrollCanvas(ctx, boxWidth, boxHeight, mario) {
-    if (mario.position.x < END_OF_MAP - boxWidth / 2)
-    {
-        if (mario.position.x - scrollSum >= boxHeight / 2)
-        {
-            scrollSum += mario.speed.length();
-            canvas.style.marginLeft = scrollSum * (-1) + 'px';
-        }
-    }
+function redraw({sky, earth, mario, boxWidth, boxHeight, ctx, window}) {
+    ctx.resetTransform();
+    drawSky(ctx, boxWidth, boxHeight, sky);
+    drawEarth(earth, ctx, boxWidth, boxHeight);
+    drawWindow(window, ctx, mario, boxWidth);
+    drawMario({ctx, mario, boxWidth, boxHeight});
 }
 
 function leftScreenCollision(mario)
 {
     if (mario.position.x <= 0)
     {
-        mario.speed = new Vec2(0, 1); 
+        mario.speed = new Vec2(1, 20); 
     }
 }
 
-function topScreenCollision(mario)
+function topScreenCollision(mario, dt)
 {
-    if (mario.position.y <= 0)
+    if (mario.position.y <= 10)
     {
-        mario.speed = new Vec2(0, 20);
+        let speed = mario.speed;
+        mario.speed = new Vec2(0, 20).add(speed);
     }
 }
 
-function bottomScreenCollision(mario, earth)
+function bottomScreenCollision(mario, earth, boxHeight)
 {
     if (mario.position.y > (earth.y - MARIO_SIZE))
     {
-        mario.speed = new Vec2(0, 1);
+        mario.speed = new Vec2(0, 0);
+        mario.position = new Vec2(mario.position.x, boxHeight * (1 - EARTH_TO_SKY) - MARIO_SIZE);
     }
 }
 
@@ -414,17 +431,28 @@ function main() {
     canvas.height = height;
     const ctx = canvas.getContext('2d');
 
-    const END_OF_MAP = 5 * width;
+    const window = new Window({
+        startX: 0,
+        startY: 0,
+        width: width,
+        height: height
+    })
 
     const earth = new Earth({
         startX: 0,
         startY: (1 - EARTH_TO_SKY) * height
     });
 
+    const sky = new Sky({
+        startX: 0,
+        startY: 0
+    })
+
     const mario = new Mario({
         position: new Vec2((width - MARIO_SIZE) / 2 , height * (1 - EARTH_TO_SKY) - MARIO_SIZE),
+        jump: false
     });
-    const keyMap = new KeyMap();
+    const keyMap = new KeyMap(mario);
 
     document.addEventListener("keydown", (event) => {
         keyMap.onKeyDown(event.keyCode);
@@ -435,11 +463,13 @@ function main() {
     });
 
     redraw({
+        sky,
         earth,
         mario,
         width, 
         height, 
-        ctx
+        ctx,
+        window
     });
 
     let lastTimestamp = Date.now(); //текущее время в ms
@@ -460,15 +490,18 @@ function main() {
             boxWidth: width,
             boxHeight: height,
             dt: deltaTime,
-            ctx
+            ctx,
+            window
         });
 
         redraw({
+            sky,
             earth,
             mario,
             boxWidth: width,
             boxHeight: height,
-            ctx
+            ctx,
+            window
         });
         requestAnimationFrame(animateFn);
     }

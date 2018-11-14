@@ -115,8 +115,7 @@ const BRICK_LEDGE_ONES = [
     [84, 8],
     [84, 7],
     [93, 6],
-    [96, 8],
-    [96, 7]
+    [96, 8]
 ];
 
 const BOX = [
@@ -151,6 +150,13 @@ const MASHROOM = [
     [94, 8]
 ];
 
-const FLAG = [100.5];
+const STAFF = [
+    [96, 7],
+    [96, 6],
+    [96, 5],
+    [96, 4]
+];
+
+const BALL = [96, 3];
 
 const EARTH = [1, 106, 9];
