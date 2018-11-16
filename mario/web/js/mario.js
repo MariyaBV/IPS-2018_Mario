@@ -6,15 +6,6 @@ function isFloatEqual(f1, f2, FLOAT_EQUAL_PRESCISION) {
     return Math.abs(f1 - f2) <= FLOAT_EQUAL_PRESCISION;
 }
 
-// пересечение отрезков
-function Intersection(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
-    let v1 = (bx2 - bx1) * (ay1 - by1) - (by2 - by1) * (ax1 - bx1);
-    let v2 = (bx2 - bx1) * (ay2 - by1) - (by2 - by1) * (ax2 - bx1);
-    let v3 =(ax2 - ax1) * (by1 - ay1) - (ay2 - ay1) * (bx1 - ax1);
-    let v4 = (ax2 - ax1) * (by2 - ay1) - (ay2 - ay1) * (bx2 - ax1);
-    return ((v1 * v2 <= 0) && (v3 * v4 <= 0));
-}
-
 const BRICK_LEDGE = [
     //[9, 12, 4],
     [9, 4],
@@ -135,14 +126,14 @@ const EARTH_SQUARE_WIDTH = 50;
 const EARTH_SQUARE_HEIGHT = 50;
 const BRICK_SIZE = 50;
 const MARIO_SIZE = 50;
-const FREE_FALL_ACCELERATION = new Vec2(0, 20);
+const FREE_FALL_ACCELERATION = new Vec2(0, 400);
 const scrollSum = 0;
 const dx = 10;
 const METER_IN_PX = 300;
 const EARTH_LINE = 0.9;
 
-const ANTISPEED_VALUE = 48;
-const AIR_DECELERATION = 5;
+const ANTISPEED_VALUE = 800;
+const AIR_DECELERATION = 0;
 
 function Vec2(x, y) {
     this.x = x;
@@ -216,45 +207,34 @@ function Sky({
 
 function Mario({
     position,
+    jump,
+    run
 }) {
     this.position = position;
     this.speed = new Vec2(0, 0);
+    this.jump = jump;
+    this.run = run;
 
     this.applyForce = function(force, dt) {
         this.speed = this.speed.add(force.multiplyScalar(dt));
         const speedVecLength = this.speed.length();
-        if (speedVecLength > Mario.MAX_SPEED) {
-            this.speed = this.speed.divideScalar(this.speed.length() / Mario.MAX_SPEED);
+        if (this.speed.x > Mario.MAX_SPEED) {
+            this.speed = new Vec2(Mario.MAX_SPEED, this.speed.y);
         }
     }
 }
 
-Mario.MAX_SPEED = 140; // для максимальной скорости
+Mario.MAX_SPEED = 200; // для максимальной скорости
 Mario.MIN_SPEED = 0; // для минимальной скорости
 
 
 let keyUp = false;
 function KeyMap(mario) {
     this._map = {};
-    this.onKeyDown = function(keyCode) {
-        console.log(STAFF[0][0]);
-        console.log(mario.position.x / 50);
-        //console.log(keyCode, KeyCode.UP_ARROW);
-        if (isFloatEqual(mario.position.x / 50, STAFF[0][0], 0.1)) {
-            delete this._map[keyCode];
-            alert("GAME OVER!");
-        } else if (keyUp && (mario.speed.length() != 0) && (keyCode == KeyCode.UP_ARROW)){
-            delete this._map[keyCode]; 
-            //console.log("_map[KeyCode.UP_ARROW] = ", this._map[KeyCode.UP_ARROW]);
-        } else {
-            this._map[keyCode] = true;
-            keyUp = false;
-        }
-    }
 
-    // this.onKeyDown = function(keyCode) {
-    //     this._map[keyCode] = true;
-    // }
+    this.onKeyDown = function(keyCode) {
+        this._map[keyCode] = true;
+    }
 
     this.onKeyUp = function(keyCode) {
         delete this._map[keyCode];
@@ -269,57 +249,30 @@ function KeyMap(mario) {
 }
 
 function processKeyMapForMario({mario, keyMap, dt, boxHeight}) {
-    const MOVE_SPEED = 100;
+    const MOVE_SPEED = 200;
 
     let wasProcessed = false;
     let directionForce = Vec2.ZERO;
-    let marioPOsY = mario.position.y;
-    // if (mario.position.y < boxHeight * EARTH_LINE - MARIO_SIZE){
-    //     mario.jump = true;
-    // } else {
-    //     mario.jump = false;
-    // }
 
+    mario.run = false;
     if (keyMap.isPressed(KeyCode.LEFT_ARROW)) {
         directionForce = directionForce.add(Direction.LEFT);
         wasProcessed = true;
-        console.log("LEFT_ARROW", directionForce);
+        mario.run = true;
     }
     if (keyMap.isPressed(KeyCode.RIGHT_ARROW)) {
         directionForce = directionForce.add(Direction.RIGHT);
         wasProcessed = true;
-        console.log("RIGHT_ARROW", directionForce);
+        mario.run = true;
     }
-    if (keyMap.isPressed(KeyCode.UP_ARROW)) {
-       //if ((marioPOsY <= boxHeight * EARTH_LINE - MARIO_SIZE) && (marioPOsY >= 0.65 * boxHeight)) {
-            directionForce = directionForce.add(Direction.UP);
-            console.log("UP_ARROW", directionForce);
-            wasProcessed = true;
-       //}
-        // if ((marioPOsY <= boxHeight * EARTH_LINE - MARIO_SIZE) && (marioPOsY > boxHeight / 2)) {
-        //     directionForce = directionForce.add(Direction.UP);
-        //     console.log("UP_ARROW", directionForce);
-        //     wasProcessed = true;
-        // }
-    }
-    if (keyMap.isPressed(KeyCode.DOWN_ARROW)) {
-        directionForce = directionForce.add(Direction.DOWN);
-        wasProcessed = true;
-        console.log("DOWN_ARROW", directionForce);
-    }
-
-    // if ((wasProcessed) && (marioPOsY == boxHeight * EARTH_LINE - MARIO_SIZE)) {
-    //     mario.applyForce(directionForce.normalize().multiplyScalar(MOVE_SPEED), dt);
-    //     console.log("!mario.jump", mario.applyForce(directionForce.normalize().multiplyScalar(MOVE_SPEED), dt));
-    // } else if ((wasProcessed) && (marioPOsY < height * EARTH_LINE - MARIO_SIZE)) {
-    //     mario.applyForce(directionForce.multiplyScalar(MOVE_SPEED), dt);
-    //     //mario.speed = directionForce.multiplyScalar(MOVE_SPEED);
-    //     console.log(mario.applyForce(directionForce.multiplyScalar(MOVE_SPEED), dt));
-    // }
-    //console.log(wasProcessed);
     if (wasProcessed) {
         mario.applyForce(directionForce.normalize().multiplyScalar(MOVE_SPEED), dt);
-        console.log("!mario.jump",directionForce.normalize().multiplyScalar(MOVE_SPEED));
+    }
+
+    if (keyMap.isPressed(KeyCode.UP_ARROW) && !mario.jump) {
+            mario.jump = true;
+            mario.speed = mario.speed.add(new Vec2(0, -500));
+            wasProcessed = true;
     }
 
     return wasProcessed;
@@ -346,48 +299,44 @@ function moveMario({mario, dt}) {
 function collision(mario, barrier) {
     let marioPosX = mario.position.x;
     let marioPosY = mario.position.y;
-    if (((marioPosX / 50 > barrier[0]) && (marioPosX / 50 < barrier[0] + 1)) ||
-    (((marioPosX + MARIO_SIZE) / 50 > barrier[0]) && ((marioPosX + MARIO_SIZE) / 50 < barrier[0] + 1))) {
-        if (isFloatEqual(marioPosY / 50, barrier[1] + 1, 0.2)) {    
-            console.log("снизу");
-            let speed = mario.speed;
-            mario.speed = new Vec2(0, 20).add(speed);
-        } else if (isFloatEqual((marioPosY + MARIO_SIZE) / 50, barrier[1], 0.2)) {
+    if (((marioPosX > barrier[0] * 50) && (marioPosX < barrier[0] * 50 + 50)) ||
+    ((marioPosX + MARIO_SIZE > barrier[0] * 50) && (marioPosX + MARIO_SIZE < barrier[0] * 50 + 50))) {
+        if (isFloatEqual(marioPosY, barrier[1] * 50 + 50, 5)) {    
             console.log("сверху");
-            mario.speed = new Vec2(0, 0);
-            mario.position = new Vec2(mario.position.x, barrier[1] * 50 - MARIO_SIZE);
-        }
-    } else if (isFloatEqual((marioPosX + MARIO_SIZE) / 50, barrier[0], 0.2)) {
-        if (((marioPosY / 50 > barrier[1]) && (marioPosY / 50 < barrier[1] + 1)) ||
-        (((marioPosY + MARIO_SIZE) / 50 > barrier[1]) && ((marioPosY + MARIO_SIZE) / 50 < barrier[1] + 1))) {
-            console.log("справа");
             let speed = mario.speed;
             mario.speed = new Vec2(0, 20).add(speed);
+        } else if (isFloatEqual(marioPosY + MARIO_SIZE, barrier[1] * 50, 5)) {
+            console.log("снизу");
+            mario.speed = new Vec2(mario.speed.x, 0);
+            mario.position = new Vec2(mario.position.x, barrier[1] * 50 - MARIO_SIZE - 0.1);
+            keyUp = false;
+            mario.jump = false;
+        }
+    } else if (isFloatEqual(marioPosX + MARIO_SIZE, barrier[0] * 50, 10)) {
+        if (((marioPosY > barrier[1] * 50) && (marioPosY < barrier[1] * 50 + 50)) ||
+        ((marioPosY + MARIO_SIZE > barrier[1] * 50) && (marioPosY + MARIO_SIZE < barrier[1] * 50 + 50))) {
+            console.log("справа");
+            let speed = mario.speed.y;
+            mario.speed = new Vec2(0, speed);
         }
         
-    } else if (isFloatEqual(marioPosX / 50, barrier[0] + 1, 0.2)) {
-        if (((marioPosY / 50 > barrier[1]) && (marioPosY / 50 < barrier[1] + 1)) ||
-        (((marioPosY + MARIO_SIZE) / 50 > barrier[1]) && ((marioPosY + MARIO_SIZE) / 50 < barrier[1] + 1))) {
+    } else if (isFloatEqual(marioPosX, barrier[0] * 50 + 50, 10)) {
+        if (((marioPosY > barrier[1] * 50) && (marioPosY < barrier[1] * 50 + 50)) ||
+        ((marioPosY + MARIO_SIZE > barrier[1] * 50) && (marioPosY + MARIO_SIZE < barrier[1] * 50 + 50))) {
             console.log("слева");
-            let speed = mario.speed;
-            mario.speed = new Vec2(0, 20).add(speed);
+            let speed = mario.speed.y;
+            mario.speed = new Vec2(0, speed);
         }
     }
 }
 
 function applyFrictionalForce({mario, dt, boxHeight}) {
-    if (mario.position.y < boxHeight * EARTH_LINE - MARIO_SIZE){
-        const antiForce = mario.speed.normalize().multiplyScalar(-1 * AIR_DECELERATION).add(FREE_FALL_ACCELERATION);
+    mario.applyForce(FREE_FALL_ACCELERATION, dt, false);
+    if (!mario.run) {
+        const normalizedSpeed = mario.speed.normalize();
+        const antiForce = new Vec2(normalizedSpeed.x, 0).multiplyScalar(-1 * ANTISPEED_VALUE);
         if (antiForce.multiplyScalar(dt).length() >= mario.speed.length()) {
-            mario.speed = new Vec2(0, 20); 
-        }
-        else {
-            mario.applyForce(antiForce, dt);
-        }
-    } else {
-        const antiForce = mario.speed.normalize().multiplyScalar(-1 * ANTISPEED_VALUE);
-        if (antiForce.multiplyScalar(dt).length() >= mario.speed.length()) {
-            mario.speed = new Vec2(0, 0);
+            mario.speed = new Vec2(0, mario.speed.y);
         }
         else {
             mario.applyForce(antiForce, dt);
@@ -408,7 +357,7 @@ function Window(width, height) {
     this.maxX = map.cols * map.tsize - width;
 }
 
-function moveWindow (mario, window, dt) {
+function moveWindow(mario, window, dt) {
     moveMario({mario, dt});
     for (const coordinate of BRICK_LEDGE){
         collision(mario, coordinate);
@@ -440,13 +389,6 @@ function drawMap(mario, ctx, window){
         rightEdge = mario.position.x / 50 + dx;
     }
     //$.getJSON( "js/objects.json", function(data) {
-        // for (const coordinate of BRICK_LEDGE){
-        //     if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
-        //         for (let i = coordinate[0]; i <= coordinate[1]; i++){
-        //             ctx.drawImage(brickImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
-        //         }
-        //     }
-        // }
         for (const coordinate of BRICK_LEDGE){
             if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
                 ctx.drawImage(brickImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
@@ -525,7 +467,8 @@ function leftScreenCollision(mario)
 {
     if (mario.position.x <= 0)
     {
-        mario.speed = new Vec2(1, 20); 
+        let speed = mario.speed;
+        mario.speed = new Vec2(0, 20).add(speed);
     }
 }
 
@@ -540,10 +483,10 @@ function topScreenCollision(mario, dt)
 
 function bottomScreenCollision(mario, earth, boxHeight)
 {
-    if (mario.position.y > (earth.y - MARIO_SIZE))
-    {
-        mario.speed = new Vec2(0, 0);
-        mario.position = new Vec2(mario.position.x, boxHeight * EARTH_LINE - MARIO_SIZE);
+    if (mario.position.y > boxHeight * EARTH_LINE - MARIO_SIZE) {
+        mario.speed = new Vec2(mario.speed.x, 0);
+        mario.jump = false;
+        mario.position = new Vec2(mario.position.x, boxHeight * EARTH_LINE - MARIO_SIZE - 0.1);
     }
 }
 
@@ -573,8 +516,9 @@ function main() {
     })
 
     const mario = new Mario({
-        position: new Vec2((width - MARIO_SIZE) / 2 , height * EARTH_LINE - MARIO_SIZE),
-        jump: false
+        position: new Vec2((width - MARIO_SIZE) / 2 - 400 , height * EARTH_LINE - MARIO_SIZE - 100),
+        jump: false,
+        run: false,
     });
     const keyMap = new KeyMap(mario);
 
