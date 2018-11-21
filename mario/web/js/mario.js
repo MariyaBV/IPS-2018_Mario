@@ -1,55 +1,39 @@
 import {KeyCode} from './keyCode.js';
 //import config from './objects.json';
 
-//const FLOAT_EQUAL_PRESCISION = 0.1;
 function isFloatEqual(f1, f2, FLOAT_EQUAL_PRESCISION) {
     return Math.abs(f1 - f2) <= FLOAT_EQUAL_PRESCISION;
 }
 
 const BRICK_LEDGE = [
-    //[9, 12, 4],
     [9, 4],
     [10, 4],
     [11, 4],
     [12, 4],
-    //[33, 34, 8],
     [33, 8],
     [34, 8],
-    //[33, 34, 7],
     [33, 7],
     [34, 7],
-    //[39, 40, 4],
     [39, 4],
     [40, 4],
-    //[45, 46, 4],
     [45, 4],
     [46, 4],
-    //[63, 65, 8],
     [63, 8],
     [64, 8],
     [65, 8],
-    //[64, 65, 7],
     [64, 7],
     [65, 7],
-    //[86, 87, 3],
     [86, 3],
     [87, 3],
-    //[87, 88, 8],
     [87, 8],
     [88, 8],
-    //[87, 88, 7],
     [88, 7],
     [87, 7],
-    //[90, 92, 8],
     [90, 8],
     [91, 8],
     [92, 8],
-    //[90, 91, 7]
     [90, 7],
     [91, 7],
-];
-
-const BRICK_LEDGE_ONES = [
     [19, 7],
     [19, 8],
     [23, 7],
@@ -108,7 +92,9 @@ const MASHROOM = [
     [94, 8]
 ];
 
-const BALL = [100, 3];
+const BALL = [
+    [100, 3]
+];
 
 const STAFF = [
     [100, 7],
@@ -117,7 +103,9 @@ const STAFF = [
     [100, 4]
 ];
 
-const EARTH = [1, 106, 9];
+const EARTH = [
+    [0, 122, 9]
+];
 
 Object.freeze(KeyCode);
 
@@ -128,7 +116,7 @@ const BRICK_SIZE = 50;
 const MARIO_SIZE = 50;
 const FREE_FALL_ACCELERATION = new Vec2(0, 400);
 const scrollSum = 0;
-const dx = 10;
+const dx = 12;
 const METER_IN_PX = 300;
 const EARTH_LINE = 0.9;
 
@@ -265,6 +253,12 @@ function processKeyMapForMario({mario, keyMap, dt, boxHeight}) {
         wasProcessed = true;
         mario.run = true;
     }
+
+    if (isFloatEqual(mario.position.x, STAFF[0][0] * 50  + 50, 10)) {
+        wasProcessed = false;
+        alert("GAME OVER!");
+    }
+
     if (wasProcessed) {
         mario.applyForce(directionForce.normalize().multiplyScalar(MOVE_SPEED), dt);
     }
@@ -291,9 +285,17 @@ function drawMario({ctx, mario, boxWidth, boxHeight}) {
     ctx.drawImage(marioImg, mario.position.x, mario.position.y , MARIO_SIZE, MARIO_SIZE);
 }
 
-function moveMario({mario, dt}) {
-    const moveDistance = mario.speed.multiplyScalar(dt);
-    mario.position = mario.position.add(moveDistance);
+function moveMario({mario, dt, window}) {
+    if (mario.position.x > (STAFF[0][0] * 50  + 50)) {
+        mario.position = new Vec2(mario.position.x, window.width.height - 2 * MARIO_SIZE - 0.1);
+        const moveDistance = new Vec2(5, 0);
+        while (mario.position.x < 110 * 50) {
+            mario.position = mario.position.add(moveDistance);
+        }
+    } else {
+        const moveDistance = mario.speed.multiplyScalar(dt);
+        mario.position = mario.position.add(moveDistance);
+    }
 }
 
 function collision(mario, barrier) {
@@ -303,8 +305,8 @@ function collision(mario, barrier) {
     ((marioPosX + MARIO_SIZE > barrier[0] * 50) && (marioPosX + MARIO_SIZE < barrier[0] * 50 + 50))) {
         if (isFloatEqual(marioPosY, barrier[1] * 50 + 50, 5)) {    
             console.log("сверху");
-            let speed = mario.speed;
-            mario.speed = new Vec2(0, 20).add(speed);
+            let speed = mario.speed.y;
+            mario.speed = new Vec2(0, -speed);
         } else if (isFloatEqual(marioPosY + MARIO_SIZE, barrier[1] * 50, 5)) {
             console.log("снизу");
             mario.speed = new Vec2(mario.speed.x, 0);
@@ -312,17 +314,17 @@ function collision(mario, barrier) {
             keyUp = false;
             mario.jump = false;
         }
-    } else if (isFloatEqual(marioPosX + MARIO_SIZE, barrier[0] * 50, 10)) {
-        if (((marioPosY > barrier[1] * 50) && (marioPosY < barrier[1] * 50 + 50)) ||
-        ((marioPosY + MARIO_SIZE > barrier[1] * 50) && (marioPosY + MARIO_SIZE < barrier[1] * 50 + 50))) {
+    } else if (isFloatEqual(marioPosX + MARIO_SIZE, barrier[0] * 50, 5)) {
+        if (((marioPosY > (barrier[1] * 50 + 1)) && (marioPosY < (barrier[1] * 50 + 50 - 1))) ||
+        (((marioPosY + MARIO_SIZE) > (barrier[1] * 50 + 1)) && (marioPosY + MARIO_SIZE < (barrier[1] * 50 + 50 - 1)))) {
             console.log("справа");
             let speed = mario.speed.y;
             mario.speed = new Vec2(0, speed);
         }
         
-    } else if (isFloatEqual(marioPosX, barrier[0] * 50 + 50, 10)) {
-        if (((marioPosY > barrier[1] * 50) && (marioPosY < barrier[1] * 50 + 50)) ||
-        ((marioPosY + MARIO_SIZE > barrier[1] * 50) && (marioPosY + MARIO_SIZE < barrier[1] * 50 + 50))) {
+    } else if (isFloatEqual(marioPosX, barrier[0] * 50 + 50, 5)) {
+        if (((marioPosY > (barrier[1] * 50 + 1)) && (marioPosY < (barrier[1] * 50 + 50 - 1))) ||
+        (((marioPosY + MARIO_SIZE) > (barrier[1] * 50 + 1)) && ((marioPosY + MARIO_SIZE) < (barrier[1] * 50 + 50 - 1)))) {
             console.log("слева");
             let speed = mario.speed.y;
             mario.speed = new Vec2(0, speed);
@@ -358,11 +360,8 @@ function Window(width, height) {
 }
 
 function moveWindow(mario, window, dt) {
-    moveMario({mario, dt});
+    moveMario({mario, dt, window});
     for (const coordinate of BRICK_LEDGE){
-        collision(mario, coordinate);
-    }
-    for (const coordinate of BRICK_LEDGE_ONES){
         collision(mario, coordinate);
     }
     for (const coordinate of BOX){
@@ -371,6 +370,9 @@ function moveWindow(mario, window, dt) {
     for (const coordinate of MASHROOM){
         collision(mario, coordinate);
     }
+    // for (const coordinate of EARTH){
+    //     collision(mario, coordinate);
+    // }
     
     if (mario.position.x / 50 >= 10){
         window.x = -mario.position.x + window.width.width / 2;
@@ -379,7 +381,7 @@ function moveWindow(mario, window, dt) {
     }
 };
 
-function drawMap(mario, ctx, window){
+function drawMap(mario, ctx, window) {
     let leftEdge, rightEdge;
     if (mario.position.x / 50 <= 10) {
         leftEdge = 0;
@@ -389,53 +391,52 @@ function drawMap(mario, ctx, window){
         rightEdge = mario.position.x / 50 + dx;
     }
     //$.getJSON( "js/objects.json", function(data) {
-        for (const coordinate of BRICK_LEDGE){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+        for (const coordinate of EARTH) {
+            for (let i = coordinate[0]; i <= coordinate[1]; i++) {
+                ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
+            }
+        }
+
+        for (const coordinate of BRICK_LEDGE) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(brickImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
 
-        for (const coordinate of BRICK_LEDGE_ONES){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
-                ctx.drawImage(brickImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
-            }
-        }
-
-        for (const coordinate of BOX){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+        for (const coordinate of BOX) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(boxImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
 
-        for (const coordinate of COIN){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+        for (const coordinate of COIN) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(coinImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
 
-        for (const coordinate of MASHROOM){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+        for (const coordinate of MASHROOM) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(mushroomImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
 
-        for (const coordinate of BALL){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
-                console.log("ball");
+        for (const coordinate of BALL) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(ballImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
 
-        for (const coordinate of STAFF){
-            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)){
+        for (const coordinate of STAFF) {
+            if ((coordinate[0] <= rightEdge) && (coordinate[0] >= leftEdge)) {
                 ctx.drawImage(staffImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE, BRICK_SIZE);
             }
         }
     //})
 }
 
-function drawWindow(window, ctx, mario){
-    if (window.x !== 0){
+function drawWindow(window, ctx, mario) {
+    if (window.x !== 0) {
         ctx.translate(window.x, 0);
     }
 
@@ -445,7 +446,7 @@ function drawWindow(window, ctx, mario){
 function update({earth, mario, boxWidth, boxHeight, dt, ctx, window}) {
     leftScreenCollision(mario);
     topScreenCollision(mario, dt);
-    bottomScreenCollision(mario, earth, boxHeight);
+    bottomScreenCollision(mario, window);
     applyFrictionalForce({mario, dt, boxHeight});
     moveWindow(mario, window, dt);
 }
@@ -458,7 +459,7 @@ function drawSky(ctx, boxWidth, boxHeight, sky) {
 function redraw({sky, earth, mario, boxWidth, boxHeight, ctx, window}) {
     ctx.resetTransform();
     drawSky(ctx, boxWidth, boxHeight, sky);
-    drawEarth(earth, ctx, boxWidth, boxHeight);
+    //drawEarth(earth, ctx, boxWidth, boxHeight);
     drawWindow(window, ctx, mario, boxWidth);
     drawMario({ctx, mario, boxWidth, boxHeight});
 }
@@ -467,8 +468,8 @@ function leftScreenCollision(mario)
 {
     if (mario.position.x <= 0)
     {
-        let speed = mario.speed;
-        mario.speed = new Vec2(0, 20).add(speed);
+        mario.position = new Vec2(0, mario.position.y);
+        mario.speed = mario.speed.add(new Vec2(0, 20));
     }
 }
 
@@ -476,17 +477,19 @@ function topScreenCollision(mario, dt)
 {
     if (mario.position.y <= 10)
     {
-        let speed = mario.speed;
-        mario.speed = new Vec2(0, 20).add(speed);
+        mario.position = new Vec2(mario.position.x, 10);
+        mario.speed = mario.speed.add(new Vec2(0, 500));
     }
 }
 
-function bottomScreenCollision(mario, earth, boxHeight)
+function bottomScreenCollision(mario, window)
 {
-    if (mario.position.y > boxHeight * EARTH_LINE - MARIO_SIZE) {
+    if (mario.position.y >  window.width.height - 2 * MARIO_SIZE) {
         mario.speed = new Vec2(mario.speed.x, 0);
         mario.jump = false;
-        mario.position = new Vec2(mario.position.x, boxHeight * EARTH_LINE - MARIO_SIZE - 0.1);
+        mario.position = new Vec2(mario.position.x, window.width.height - 2 * MARIO_SIZE - 0.1);
+        console.log("снизу-earth");
+        keyUp = false;
     }
 }
 
