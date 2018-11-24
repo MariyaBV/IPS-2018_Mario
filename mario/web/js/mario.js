@@ -291,8 +291,14 @@ function collision(mario, object, objType) {
                 mario.speed = new Vec2(0, -speed);
             }
             if (objType == objectType.coin) {
-                const delCoin = [object[0], object[1], object[2], object[3]];
-                delete COIN[delCoin];
+                console.log("coin 2a ");
+                for (const coordinate of COIN) {
+                    console.log("coin 2b ");
+                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
+                        console.log("coin 2c ");
+                        delete COIN[coordinate];
+                    }
+                }
             }
         } 
         if (isFloatEqual(marioPosY + MARIO_SIZE, object[1] * OBJECT_HEIGHT, 1)) {
@@ -304,8 +310,14 @@ function collision(mario, object, objType) {
                 mario.jump = false;
             }
             if (objType == objectType.coin) {
-                const delCoin = [object[0], object[1], object[2], object[3]];
-                delete COIN[delCoin];
+                console.log("coin 1a ");
+                for (const coordinate of COIN) {
+                    console.log("coin 1b ");
+                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
+                        delete COIN[coordinate];
+                        console.log("coin 1c ");
+                    }
+                }
             }
         }
     } 
@@ -318,8 +330,14 @@ function collision(mario, object, objType) {
                 mario.speed = new Vec2(0, speed);
             }
             if (objType == objectType.coin) {
-                const delCoin = [object[0], object[1], object[2], object[3]];
-                delete COIN[delCoin];
+                console.log("coin 3a ");
+                for (const coordinate of COIN) {
+                    console.log("coin 3b ");
+                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
+                        console.log("coin 3c ");
+                        delete COIN[coordinate];
+                    }
+                }
             }
         }
         
@@ -333,8 +351,14 @@ function collision(mario, object, objType) {
                 mario.speed = new Vec2(0, speed);
             }
             if (objType == objectType.coin) {
-                const delCoin = [object[0], object[1], object[2], object[3]];
-                delete COIN[delCoin];
+                console.log("coin 4a ");
+                for (const coordinate of COIN) {
+                    console.log("coin 4b ");
+                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
+                        console.log("coin 4c ");
+                        delete COIN[coordinate];
+                    }
+                }
             }
         }
     }
