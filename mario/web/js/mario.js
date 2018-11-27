@@ -4,6 +4,15 @@ function isFloatEqual(f1, f2, FLOAT_EQUAL_PRESCISION) {
     return Math.abs(f1 - f2) <= FLOAT_EQUAL_PRESCISION;
 }
 
+// пересечение отрезков
+function intersection(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
+    let v1 = (bx2 - bx1) * (ay1 - by1) - (by2 - by1) * (ax1 - bx1);
+    let v2 = (bx2 - bx1) * (ay2 - by1) - (by2 - by1) * (ax2 - bx1);
+    let v3 =(ax2 - ax1) * (by1 - ay1) - (ay2 - ay1) * (bx1 - ax1);
+    let v4 = (ax2 - ax1) * (by2 - ay1) - (ay2 - ay1) * (bx2 - ax1);
+    return ((v1 * v2 <= 0) && (v3 * v4 <= 0));
+}
+
 // x, y , width, height - в относительных
 const BRICK_LEDGE_ONES = [
     [19, 7, 1, 2],
@@ -102,6 +111,9 @@ const METER_IN_PX = 300;
 const EARTH_LINE = 0.9;
 const OBJECT_HEIGHT = 50;
 const OBJECT_WIDTH = 50;
+let AMOUNT_OF_COINS = 0;
+let AMOUNT_OF_ENEMIES = 0;
+let NUMBER_OF_LIVES = 3;
 
 const ANTISPEED_VALUE = 800;
 const AIR_DECELERATION = 0;
@@ -239,7 +251,7 @@ function processKeyMapForMario({mario, keyMap, dt, boxHeight}) {
 
     if (isFloatEqual(mario.position.x, STAFF[0][0] * 50  + 50, 10)) {
         wasProcessed = false;
-        alert("GAME OVER!");
+        alert("END of the GAME!");
     }
 
     if (wasProcessed) {
@@ -276,32 +288,37 @@ function moveMario({mario, dt, window}) {
     }
 }
 
-function collision(mario, object, objType) {
+function collision(mario, object, objType, window) {
     let marioPosX = mario.position.x;
     let marioPosY = mario.position.y;
-    
     if (((marioPosX > (object[0] * OBJECT_WIDTH)) && (marioPosX < (object[0] + object[2]) * OBJECT_WIDTH)) ||
-    (((marioPosX + MARIO_SIZE) > (object[0] * OBJECT_WIDTH)) && ((marioPosX + MARIO_SIZE) < (object[0] + object[2]) * OBJECT_WIDTH))) {
-        console.log("VNUTRI ");
-        console.log("objectType = ", objType, objectType.barrier);
+    (((marioPosX + MARIO_SIZE) > (object[0] * OBJECT_WIDTH)) && 
+    ((marioPosX + MARIO_SIZE) < (object[0] + object[2]) * OBJECT_WIDTH))) {
         if (isFloatEqual(marioPosY, (object[1] + object[3]) * OBJECT_HEIGHT, 1)) { 
-            console.log("sverhu prymougolnik", "objectTypeVec = ", objectType);
+            console.log("sverhu pryamoug");
             if (objType == objectType.barrier) {
                 let speed = mario.speed.y;
                 mario.speed = new Vec2(0, -speed);
-            }
+            };
             if (objType == objectType.coin) {
-                console.log("coin 2a ");
-                for (const coordinate of COIN) {
-                    console.log("coin 2b ");
-                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
-                        console.log("coin 2c ");
-                        delete COIN[coordinate];
+                for (let i = 0; i < COIN.length; i++) {
+                    if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
+                        COIN.splice(i, 1);
+                        AMOUNT_OF_COINS ++;
+                        console.log("Количество монет = ", AMOUNT_OF_COINS);
                     }
                 }
             }
+            if (objType == objectType.enemy) {
+                NUMBER_OF_LIVES --;
+                console.log("Количество ЖИЗНЕЙ = ", NUMBER_OF_LIVES);
+                mario.position = new Vec2((window.width.width - MARIO_SIZE) / 2 - 400 , window.width.height * EARTH_LINE - MARIO_SIZE - 100);
+                if (NUMBER_OF_LIVES == 0) {
+                    alert ("GAME OVER!");
+                }
+            }
         } 
-        if (isFloatEqual(marioPosY + MARIO_SIZE, object[1] * OBJECT_HEIGHT, 1)) {
+        if ((isFloatEqual(marioPosY + MARIO_SIZE, object[1] * OBJECT_HEIGHT, 1))) {
             console.log("snizu pryamoug");
             if (objType == objectType.barrier) {
                 mario.speed = new Vec2(mario.speed.x, 0);
@@ -310,12 +327,20 @@ function collision(mario, object, objType) {
                 mario.jump = false;
             }
             if (objType == objectType.coin) {
-                console.log("coin 1a ");
-                for (const coordinate of COIN) {
-                    console.log("coin 1b ");
-                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
-                        delete COIN[coordinate];
-                        console.log("coin 1c ");
+                for (let i = 0; i < COIN.length; i++) {
+                    if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
+                        COIN.splice(i, 1);
+                        AMOUNT_OF_COINS ++;
+                        console.log("Количество монет = ", AMOUNT_OF_COINS);
+                    }
+                }
+            }
+            if (objType == objectType.enemy) {
+                for (let j = 0; j < ENEMY.length; j++) {
+                    if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
+                        ENEMY.splice(j, 1);
+                        AMOUNT_OF_ENEMIES ++;
+                        console.log("Количество убитых ENEMIES = ", AMOUNT_OF_ENEMIES);
                     }
                 }
             }
@@ -330,13 +355,20 @@ function collision(mario, object, objType) {
                 mario.speed = new Vec2(0, speed);
             }
             if (objType == objectType.coin) {
-                console.log("coin 3a ");
-                for (const coordinate of COIN) {
-                    console.log("coin 3b ");
-                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
-                        console.log("coin 3c ");
-                        delete COIN[coordinate];
+                for (let i = 0; i < COIN.length; i++) {
+                    if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
+                        COIN.splice(i, 1);
+                        AMOUNT_OF_COINS ++;
+                        console.log("Количество монет = ", AMOUNT_OF_COINS);
                     }
+                }
+            }
+            if (objType == objectType.enemy) {
+                NUMBER_OF_LIVES --;
+                console.log("Количество ЖИЗНЕЙ = ", NUMBER_OF_LIVES);
+                mario.position = new Vec2((window.width.width - MARIO_SIZE) / 2 - 400 , window.width.height * EARTH_LINE - MARIO_SIZE - 100);
+                if (NUMBER_OF_LIVES == 0) {
+                    alert ("GAME OVER!");
                 }
             }
         }
@@ -351,20 +383,27 @@ function collision(mario, object, objType) {
                 mario.speed = new Vec2(0, speed);
             }
             if (objType == objectType.coin) {
-                console.log("coin 4a ");
-                for (const coordinate of COIN) {
-                    console.log("coin 4b ");
-                    if ((coordinate[0] == object[0]) && (coordinate[1] == object[1])) {
-                        console.log("coin 4c ");
-                        delete COIN[coordinate];
+                for (let i = 0; i < COIN.length; i++) {
+                    if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
+                        COIN.splice(i, 1);
+                        AMOUNT_OF_COINS ++;
+                        console.log("Количество монет = ", AMOUNT_OF_COINS);
                     }
+                }
+            }
+            if (objType == objectType.enemy) {
+                NUMBER_OF_LIVES --;
+                console.log("Количество ЖИЗНЕЙ = ", NUMBER_OF_LIVES);
+                mario.position = new Vec2((window.width.width - MARIO_SIZE) / 2 - 400 , window.width.height * EARTH_LINE - MARIO_SIZE - 100);
+                if (NUMBER_OF_LIVES == 0) {
+                    alert ("GAME OVER!");
                 }
             }
         }
     }
 }
 
-function applyFrictionalForce({mario, dt, boxHeight}) {
+function applyFrictionalForce({mario, dt}) {
     mario.applyForce(FREE_FALL_ACCELERATION, dt, false);
     if (!mario.run) {
         const normalizedSpeed = mario.speed.normalize();
@@ -393,19 +432,19 @@ function Window(width, height) {
 
 function collisionWithObject(mario, window, dt) {
     for (const coordinate of BRICK_LEDGE_ONES){
-        collision(mario, coordinate, objectType.barrier);
+        collision(mario, coordinate, objectType.barrier, window);
     }
     for (const coordinate of BOX){
-        collision(mario, coordinate, objectType.barrier);
+        collision(mario, coordinate, objectType.barrier, window);
     }
     for (const coordinate of ENEMY){
-        collision(mario, coordinate, objectType.enemy);
+        collision(mario, coordinate, objectType.enemy, window);
     }
     for (const coordinate of BRICK_LEDGE) {
-        collision(mario, coordinate, objectType.barrier);
+        collision(mario, coordinate, objectType.barrier, window);
     }
     for (const coordinate of COIN) {
-        collision(mario, coordinate, objectType.coin);
+        collision(mario, coordinate, objectType.coin, window);
     }
     if (mario.position.x >= 525){
         window.x = -mario.position.x + window.width.width / 2;
@@ -493,7 +532,7 @@ function drawWindow(window, ctx, mario) {
     drawMap(mario, ctx, window);
 }
 
-function update({earth, mario, boxWidth, boxHeight, dt, ctx, window}) {
+function update({mario, boxWidth, boxHeight, dt, ctx, window}) {
     applyFrictionalForce({mario, dt, boxHeight});
     leftScreenCollision(mario);
     topScreenCollision(mario, dt);
@@ -538,7 +577,6 @@ function bottomScreenCollision(mario, window)
         mario.speed = new Vec2(mario.speed.x, 0);
         mario.jump = false;
         mario.position = new Vec2(mario.position.x, window.width.height - OBJECT_HEIGHT - MARIO_SIZE - 0.1);
-        console.log("снизу-earth");
         keyUp = false;
     }
 }
@@ -610,7 +648,6 @@ function main() {
 
         for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
             update({
-                earth,
                 mario,
                 boxWidth: width,
                 boxHeight: height,
