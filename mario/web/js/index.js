@@ -32,7 +32,9 @@ function main() {
     const keyMap = new KeyMap(mario);
 
     const game = new Game({
-        start: true
+        finished: false,
+        startTime: Date.now(),
+        endTime: null,
     })
 
     document.addEventListener("keydown", (event) => {
@@ -67,7 +69,7 @@ function main() {
             game
         });
 
-        if (game.start == true) {
+        if (!game.finished) {
             for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
                 update({
                     mario,
