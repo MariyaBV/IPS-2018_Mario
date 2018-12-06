@@ -1,0 +1,46 @@
+@import "const/const.scss";
+
+.b-authorization
+{
+    &__button
+    {
+        width: 100%;
+        padding: 10px;
+        font: 400 20px/24px $mainFont;
+    }
+
+    &__input
+    {
+        padding: 10px;
+        font: 400 20px/24px $mainFont;
+    }
+
+    &__form-group
+    {
+        margin-bottom: 35px;
+    }
+
+    &__form
+    {
+        margin-top: 13%;
+    }
+
+    &__subtitle
+    {
+        text-align: center;
+        margin-bottom: 45px;
+        font: 900 40px/48px $mainFont;
+        color: $blueFont;
+    }
+}
+
+@media screen and (max-width: 1450px) 
+{
+    .b-authorization
+    {
+        &__form
+        {
+            margin-top: 10%;
+        }
+    }
+}

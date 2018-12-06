@@ -57,6 +57,7 @@ function collisionWithCoin(object) {
         if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
             COIN.splice(i, 1);
             AMOUNT_OF_COINS ++;
+            document.getElementById('coin').innerHTML = AMOUNT_OF_COINS; //html('<span>' + AMOUNT_OF_COINS + '</span>');
             console.log("Количество монет = ", AMOUNT_OF_COINS);
         }
     }
@@ -68,6 +69,8 @@ function newPositionAfterLosingLife(window) {
 
 function collisionWithEnemyWithLosingLife(mario, window, game) {
     NUMBER_OF_LIVES --;
+    //document.getElementById('live').value = NUMBER_OF_LIVES;
+    document.getElementById('live').innerHTML = NUMBER_OF_LIVES;
     console.log("Количество ЖИЗНЕЙ = ", NUMBER_OF_LIVES);
     mario.position = newPositionAfterLosingLife(window);
     if (NUMBER_OF_LIVES == 0) {
@@ -91,6 +94,8 @@ function killEnemy(object) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES ++;
+            //document.getElementById('gumba').value = AMOUNT_OF_ENEMIES;
+            document.getElementById('gumba').innerHTML = AMOUNT_OF_ENEMIES;
             console.log("Количество убитых ENEMIES = ", AMOUNT_OF_ENEMIES);
         }
     }
@@ -171,7 +176,7 @@ function collision(mario, object, objType, window, dt, game) {
     }
 }
 
-function collisionWithObject(mario, window, dt, game) {
+function collisionWithObject(mario, window, dt, game, boxWidth) {
     for (const coordinate of BRICK_LEDGE_ONES){
         collision(mario, coordinate, objectType.barrier, window, dt, game);
     }
@@ -184,7 +189,7 @@ function collisionWithObject(mario, window, dt, game) {
     for (const coordinate of COIN) {
         collision(mario, coordinate, objectType.coin, window, dt, game);
     }
-    if (mario.position.x >= 525){
+    if (mario.position.x >= (boxWidth / 2)) {
         window.x = -mario.position.x + window.width.width / 2;
     } else {
         window.x = 0;

@@ -37,6 +37,6 @@ function update({mario, boxWidth, boxHeight, dt, ctx, window, game}) {
     leftScreenCollision(mario);
     topScreenCollision(mario, dt);
     bottomScreenCollision(mario, window);
-    collisionWithObject(mario, window, dt, game);
+    collisionWithObject(mario, window, dt, game, boxWidth);
     moveMario({mario, dt, window});
 }

@@ -78,9 +78,16 @@ export {Earth, Sky, Mario, Game, Window};
 const MARIO_SIZE = 50;
 const EARTH_LINE = 0.9;
 const canvas = document.getElementById('canvas');
-const width = canvas.offsetWidth;
-const height = canvas.offsetHeight;
+//const container = document.getElementById('container');
+//const width = container.style.maxWidth;
+let width;
+if (window.innerWidth >= 1200) {
+    width = 1200;
+} else {
+    width = window.innerWidth;
+}
 canvas.width = width;
+const height = canvas.offsetHeight;
 canvas.height = height;
 const ctx = canvas.getContext('2d');
 const EARTH_TO_SKY = 0.1;

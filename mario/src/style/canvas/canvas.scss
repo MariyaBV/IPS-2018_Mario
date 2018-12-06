@@ -1,17 +1,185 @@
+@import "const/const.scss";
+
 .b-canvas-wrapper 
 {
-    width: 100%;
-    height: 100%;
+    //width: 100%;
+    //height: 100%;
+    margin: 25px auto;
 
     &__canvas
     {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        margin: auto;
-        width: 1050px;
+        // position: absolute;
+        // top: 0;
+        // bottom: 0;
+        // right: 0;
+        // left: 0;
+        width: 100%;
+        max-width: 1200px;
         height: 500px;
+        margin: auto;
+        display: block;
+    }
+
+    &__block-menu
+    {
+        font: 600 20px/24px $mainFont;
+    }
+
+    &__title 
+    {
+        vertical-align: middle;
+        display: inline-block;
+        color: $redFont;
+        font: 900 60px/70px $mainFont;
+        margin: 0;
+    }
+
+    &__img 
+    {
+        width: 30px;
+        vertical-align: middle;
+        display: inline-block;
+
+        &_keyboard
+        {
+            width: 70%;
+        }
+    }
+
+    &__all-point
+    {
+        vertical-align: middle;
+        display: inline-block; 
+    }
+
+    &__point-description
+    {
+        margin: 0 10px;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    &__point
+    {
+        width: 40px;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        border: 1px solid $grey;
+        font-weight: 400;
+    }
+
+    &__item
+    {
+        width: 50%;
+        margin-left: 25%;
+    }
+
+    &__point-img
+    {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 860px) 
+{
+    .b-canvas-wrapper
+    {
+        &__point-description
+        {
+            font-size: 18px;
+        }
+
+        &__point-description
+        {
+            margin: 0 5px;
+        }
+
+        &__title
+        {
+            font-size: 50px;
+            line-height: 58px;
+        }
+
+        &__item
+        {
+            width: 70%;
+            margin-left: 15%;
+        }
+    }
+}
+
+@media screen and (max-width: 620px) and (min-width: 576px)
+{
+    .b-canvas-wrapper 
+    {
+        &__item
+        {
+            width: 100%;
+            margin: 0;
+        }
+
+        &__img
+        {
+            width: 45px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px)
+{
+    .b-canvas-wrapper 
+    {
+        &__img
+        {
+            width: 45px;
+        }
+    }
+}
+
+@media screen and (max-width: 515px)
+{
+    .b-canvas-wrapper 
+    {   
+        margin: 10px auto;
+
+        &__point-title
+        {
+            display: none;
+        }
+
+        &__point-img
+        {
+            display: inline-block;
+            vertical-align: middle;
+            width: 30px;
+            height: 30px;
+
+            &_coin
+            {
+                background: url("../img/coin.svg") no-repeat;
+            }
+
+            &_goomba
+            {
+                background: url("../img/goomba.svg") no-repeat;
+            }
+
+            &_live
+            {
+                background: url("../img/live.svg") no-repeat;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 349px) 
+{
+    .b-canvas-wrapper
+    {
+        &__point-description
+        {
+            margin: 0;
+        }
     }
 }

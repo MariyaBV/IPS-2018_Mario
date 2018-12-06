@@ -69,7 +69,7 @@ function main() {
             game
         });
 
-        if (!game.finished) {
+        
             for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
                 update({
                     mario,
@@ -92,9 +92,16 @@ function main() {
                 ctx,
                 window
             });
-        }
-       
-        requestAnimationFrame(animateFn);
+
+        
+       if (!game.finished) {
+            requestAnimationFrame(animateFn);
+       } else {
+        document.location.href = "http://localhost/web/end_of_game.html";
+        //header("Location: http://localhost/web/end_of_game.html"); 
+        //exit();
+        console.log("END of the GAME!");
+    }
     }
     animateFn();
 };

@@ -43,11 +43,10 @@ function processKeyMapForMario({mario, keyMap, dt, boxHeight, game}) {
         mario.run = true;
     }
 
-    if ((mario.position.x > STAFF[0][0] * 50  + 50) && (game.finished)) {
+    if ((mario.position.x > STAFF[0][0] * 50  + 50) && (!game.finished)) {
         wasProcessed = false;
-        alert("END of the GAME!");
         game.finished = true;
-        endTime = Date.now();
+        const endTime = Date.now();
     }
 
     if (wasProcessed) {

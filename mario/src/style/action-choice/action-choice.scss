@@ -1,0 +1,58 @@
+.b-action-choice
+{
+    &__button
+    {
+        font: 400 20px/24px $mainFont;
+
+        &_red
+        {
+            padding: 10px 25px;
+        }
+
+        &_not-red
+        {
+            padding: 15px;
+            width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 767px) 
+{
+    .b-action-choice
+    {
+        &__button
+        {
+            &_red
+            {
+                float: right;
+                margin: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 500px) 
+{
+    .b-action-choice
+    {
+        &__button
+        {
+            &_red
+            {
+                padding: 10px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 340px) 
+{
+    .b-action-choice
+    {
+        &__title
+        {
+            font-size: 43px;
+        }
+    }
+}

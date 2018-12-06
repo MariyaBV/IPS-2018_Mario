@@ -1,0 +1,145 @@
+@import "const/const.scss";
+
+.b-main-page
+{
+    &__block
+    {
+        margin-bottom: 45px;
+    }
+
+    &__item
+    {
+        margin-bottom: 20px;
+    }
+
+    &__play
+    {
+        margin-right: 20px;
+    }
+
+    &__title
+    {
+        color: $redFont;
+        font: 900 60px/66px $mainFont;
+        //margin: 20px auto 40px;
+        margin: 0;
+        display: inline-block;
+        vertical-align: middle;
+
+        &_small
+        {
+            font-size: 36px;
+            margin: 0;
+        }
+    }
+
+    &__subtitle 
+    {
+        font: 600 33px/40px $mainFont;
+        color: $blueFont;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    &__description
+    {
+        font: 400 18px/24px $mainFont;
+        text-align: justify;
+        margin: 0;
+
+        &_distinction 
+        {
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+
+    &__img 
+    {
+        width: 70%;
+        margin-left: 15%;
+    }
+
+    &__game
+    {
+        background: url("../img/game-page.jpg") no-repeat center;
+        height: 600px;
+        border: 2px solid grey;
+    }
+
+    &__buttons-block
+    {
+        font: 400 18px/24px "Source Sans Pro",sans-serif;
+        text-align: right;
+    }
+}
+
+@media screen and (max-width: 991px) 
+{
+    .b-main-page
+    {
+        &__game
+        {
+            background: url("../img/game-page-991.jpg") no-repeat right;
+        } 
+
+        &__title
+        {
+            line-height: 45px;
+
+            &_small
+            {
+                line-height: 36px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 767px) 
+{
+    .b-main-page
+    {
+        &__game
+        {
+            background: url("../img/game-page-767.jpg") no-repeat center;
+            height: 400px;
+        } 
+
+        &__title
+        {
+            font-size: 50px;
+
+            &_small 
+            {
+                font-size: 26px;
+            }
+        }
+
+        &__buttons-block
+        {
+            text-align: left;
+        }
+    }
+}
+
+@media screen and (max-width: 343px) 
+{
+    .b-main-page
+    {
+        &__play
+        {
+            margin-right: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 323px) 
+{
+    .b-main-page
+    {
+        &__play
+        {
+            padding: 6px 8px;
+        }
+    }
+}

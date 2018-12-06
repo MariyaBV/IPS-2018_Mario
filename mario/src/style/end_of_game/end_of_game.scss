@@ -1,0 +1,14 @@
+.b-end-of-game
+{
+    &__name-player
+    {
+        padding: 10px;
+        font: 400 20px/24px $mainFont;
+        text-align: center;
+    }
+
+    &__point
+    {
+        text-align: end;
+    }
+}
