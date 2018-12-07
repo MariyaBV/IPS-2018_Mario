@@ -73,7 +73,7 @@ export const CASTLE = [
 ];
 
 export {UPDATES_PER_FRAME, MARIO_SIZE, EARTH_LINE, canvas, width, height, ctx, EARTH_TO_SKY, BRICK_SIZE, dx, ANTISPEED_VALUE, AIR_DECELERATION};
-export {Earth, Sky, Mario, Game, Window};
+export {Earth, Sky, Mario, Game, ViewPort};
 
 const MARIO_SIZE = 50;
 const EARTH_LINE = 0.9;
@@ -142,7 +142,7 @@ function Game({
     this.endTime = endTime;
 }
 
-function Window(width, height) {
+function ViewPort(width, height) {
     this.x = 0;
     this.y = 0;
     this.width = width;

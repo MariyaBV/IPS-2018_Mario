@@ -1,12 +1,12 @@
 import {UPDATES_PER_FRAME, MARIO_SIZE, EARTH_LINE, width, height, ctx, EARTH_TO_SKY} from './const.js';
-import {Earth, Sky, Mario, Game, Window} from './const.js';
+import {Earth, Sky, Mario, Game, ViewPort} from './const.js';
 import {redraw} from './draw.js';
 import {Vec2} from './vector.js';
 import {update} from './update.js';
 import {KeyMap, processKeyMap} from './key_map.js';
 
 function main() {
-    const window = new Window({
+    const viewPort = new ViewPort({
         startX: 0,
         startY: 0,
         width: width,
@@ -37,6 +37,28 @@ function main() {
         endTime: null,
     })
 
+    const point = new PointerEvent({
+        pointOfCoin: onCoinCountChange,
+        pointOfLive: onLiveCountChange,
+        pointOfGumba: onGumbaCountChange,
+    })
+
+    const gumbaPoint = document.getElementById('gumba');
+    const coinPoint = document.getElementById('coin');
+    const livePoint = document.getElementById('live');
+
+    function onCoinCountChange(value) {
+        coinPoint.textContent = value;
+    }
+
+    function onGumbaCountChange(value) {
+        gumbaPoint.textContent = value;
+    }
+
+    function onLiveCountChange(value) {
+        livePoint.textContent = value;
+    }
+
     document.addEventListener("keydown", (event) => {
         keyMap.onKeyDown(event.keyCode);
     });
@@ -52,7 +74,7 @@ function main() {
         width, 
         height, 
         ctx,
-        window
+        viewPort
     });
 
     let lastTimestamp = Date.now(); //текущее время в ms
@@ -77,8 +99,9 @@ function main() {
                     boxHeight: height,
                     dt: deltaTime / UPDATES_PER_FRAME,
                     ctx,
-                    window,
-                    game
+                    viewPort,
+                    game,
+                    point
                 });
             }
     
@@ -90,17 +113,16 @@ function main() {
                 boxWidth: width,
                 boxHeight: height,
                 ctx,
-                window
+                viewPort
             });
 
         
        if (!game.finished) {
             requestAnimationFrame(animateFn);
        } else {
-        document.location.href = "http://localhost/web/end_of_game.html";
+        document.location.href = "http://localhost/end_of_game.php";
         //header("Location: http://localhost/web/end_of_game.html"); 
         //exit();
-        console.log("END of the GAME!");
     }
     }
     animateFn();

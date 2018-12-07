@@ -81,7 +81,7 @@
     }
 }
 
-@media screen and (max-width: 860px) 
+@media screen and (max-width: 920px) 
 {
     .b-canvas-wrapper
     {
@@ -105,6 +105,23 @@
         {
             width: 70%;
             margin-left: 15%;
+        }
+    }
+}
+
+@media screen and (max-width: 810px) 
+{
+    .b-canvas-wrapper
+    {
+        &__point-description
+        {
+            margin: 0;
+        }
+
+        &__title
+        {
+            font-size: 46px;
+            line-height: 52px;
         }
     }
 }

@@ -1,0 +1,16 @@
+{% extends "layout_main.html.twig" %}
+
+{% block title %}End of game{% endblock %}
+
+{% block menu %}
+    {% include("menu_heading.html.twig")%}
+{% endblock %}
+
+{% block content %}
+    {% include("form_registration.html.twig") %}
+{% endblock %}
+
+{% block js %}
+    <script src="web/js/form.js"></script>
+    {% include("common/common_js.twig") %}
+{% endblock %}

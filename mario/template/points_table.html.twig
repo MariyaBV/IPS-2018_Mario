@@ -1,0 +1,28 @@
+{% extends "layout_main.html.twig" %}
+
+{% block title %}Table of points{% endblock %}
+
+{% block menu %}
+    <div class="container mt-md-4 mb-md-5 my-3">
+        <div class="row justify-content-md-between">
+            <div class="col-lg-5 col-md-4 mb-xs-4">
+                <h1 class="b-canvas-wrapper__title">MARIO<span class="b-main-page__title b-main-page__title_small">x2</span></h1>
+            </div>
+            <div class="col-lg-5 col-md-7 my-3 b-main-page__buttons-block">
+                <a href="http://localhost/mario.php">
+                    <button type="button" class="btn btn-success b-main-page__play">Играть</button>
+                </a>
+                <a href="http://localhost/personal_account.php">
+                    <button type="button" class="btn btn-primary">Личный кабинет</button>
+                </a>
+                <a href="http://localhost/index.php">
+                    <button type="button" class="btn btn-danger">Выйти</button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% include("form_table.html.twig") %}
+{% endblock %}

@@ -2,21 +2,21 @@ import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE, 
 export {redraw};
 
 let earthImg = new Image();
-earthImg.src = "img/earth.png";
+earthImg.src = "web/img/earth.png";
 let marioImg = new Image();
-marioImg.src = "img/mario.png";
+marioImg.src = "web/img/mario.png";
 let brickImg = new Image();
-brickImg.src = "img/brick.png";
+brickImg.src = "web/img/brick.png";
 let coinImg = new Image();
-coinImg.src = "img/coin.png";
+coinImg.src = "web/img/coin.png";
 let enemyImg = new Image();
-enemyImg.src = "img/enemy.png";
+enemyImg.src = "web/img/enemy.png";
 let ballImg = new Image();
-ballImg.src = "img/ball.png";
+ballImg.src = "web/img/ball.png";
 let staffImg = new Image();
-staffImg.src = "img/staff.png";
+staffImg.src = "web/img/staff.png";
 let castleImg = new Image();
-castleImg.src = "img/castle.png";
+castleImg.src = "web/img/castle.png";
 
 function drawMario({ctx, mario, boxWidth, boxHeight}) {
     ctx.drawImage(marioImg, mario.position.x, mario.position.y , MARIO_SIZE, MARIO_SIZE);
@@ -34,11 +34,11 @@ function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
     }
 }
 
-function drawMap(mario, ctx, window) {
+function drawMap(mario, ctx, viewPort) {
     let leftEdge, rightEdge;
     if (mario.position.x / 50 <= 10) {
         leftEdge = 0;
-        rightEdge = window.width.width;
+        rightEdge = viewPort.width.width;
     } else {
         leftEdge = mario.position.x / 50 - dx;
         rightEdge = mario.position.x / 50 + dx;
@@ -64,12 +64,12 @@ function drawMap(mario, ctx, window) {
     //})
 }
 
-function drawWindow(window, ctx, mario) {
-    if (window.x !== 0) {
-        ctx.translate(window.x, 0);
+function drawViewPort(viewPort, ctx, mario) {
+    if (viewPort.x !== 0) {
+        ctx.translate(viewPort.x, 0);
     }
 
-    drawMap(mario, ctx, window);
+    drawMap(mario, ctx, viewPort);
 }
 
 
@@ -78,9 +78,9 @@ function drawSky(ctx, boxWidth, boxHeight, sky) {
     ctx.fillRect(sky.x, 0, boxWidth, boxHeight);
 }
 
-function redraw({sky, earth, mario, boxWidth, boxHeight, ctx, window}) {
+function redraw({sky, earth, mario, boxWidth, boxHeight, ctx, viewPort}) {
     ctx.resetTransform();
     drawSky(ctx, boxWidth, boxHeight, sky);
-    drawWindow(window, ctx, mario, boxWidth);
+    drawViewPort(viewPort, ctx, mario, boxWidth);
     drawMario({ctx, mario, boxWidth, boxHeight});
 }

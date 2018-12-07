@@ -1,0 +1,14 @@
+@import "const/const.scss";
+
+.b-points-table
+{
+    &__one-game
+    {
+        border-bottom: 2px solid $grey;
+    }
+
+    &__table
+    {
+        overflow-x: hidden;
+    }
+}

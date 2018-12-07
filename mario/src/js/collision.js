@@ -15,11 +15,11 @@ const objectType = {
     enemy: 3
 }
 
-function bottomScreenCollision(mario, window) {
-    if (mario.position.y >  window.width.height - 2 * MARIO_SIZE) {
+function bottomScreenCollision(mario, viewPort) {
+    if (mario.position.y >  viewPort.width.height - 2 * MARIO_SIZE) {
         mario.speed = new Vec2(mario.speed.x, 0);
         mario.jump = false;
-        mario.position = new Vec2(mario.position.x, window.width.height - OBJECT_HEIGHT - MARIO_SIZE - 0.1);
+        mario.position = new Vec2(mario.position.x, viewPort.width.height - OBJECT_HEIGHT - MARIO_SIZE - 0.1);
         mario.keyUp = false;
     }
 }
@@ -63,21 +63,21 @@ function collisionWithCoin(object) {
     }
 }
 
-function newPositionAfterLosingLife(window) {
-    return new Vec2((window.width.width - MARIO_SIZE) / 2 - 400 , window.width.height * EARTH_LINE - MARIO_SIZE - 100);
+function newPositionAfterLosingLife(viewPort) {
+    return new Vec2((viewPort.width.width - MARIO_SIZE) / 2 - 400 , viewPort.width.height * EARTH_LINE - MARIO_SIZE - 100);
 }
 
-function collisionWithEnemyWithLosingLife(mario, window, game) {
+function collisionWithEnemyWithLosingLife(mario, viewPort, game) {
     NUMBER_OF_LIVES --;
     //document.getElementById('live').value = NUMBER_OF_LIVES;
     document.getElementById('live').innerHTML = NUMBER_OF_LIVES;
     console.log("Количество ЖИЗНЕЙ = ", NUMBER_OF_LIVES);
-    mario.position = newPositionAfterLosingLife(window);
+    mario.position = newPositionAfterLosingLife(viewPort);
     if (NUMBER_OF_LIVES == 0) {
         alert ("GAME OVER!");
         game.finished = true;
-        endTime = Date.now();
-        mario.position = new Vec2((window.width.width - MARIO_SIZE) / 2 - 400 , window.width.height * EARTH_LINE - MARIO_SIZE);
+        const endTime = Date.now();
+        mario.position = new Vec2((viewPort.width.width - MARIO_SIZE) / 2 - 400 , viewPort.width.height * EARTH_LINE - MARIO_SIZE);
     }
 }
 
@@ -89,13 +89,14 @@ function collisionAtSideOfBarrier(mario, isLeftCollision) {
     mario.speed = new Vec2(speedX, speedY);
 }
 
-function killEnemy(object) {
+function killEnemy(object, point) {
     for (let j = 0; j < ENEMY.length; j++) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES ++;
+            point.pointOfGoomba = AMOUNT_OF_ENEMIES;
             //document.getElementById('gumba').value = AMOUNT_OF_ENEMIES;
-            document.getElementById('gumba').innerHTML = AMOUNT_OF_ENEMIES;
+            //document.getElementById('gumba').innerHTML = AMOUNT_OF_ENEMIES;
             console.log("Количество убитых ENEMIES = ", AMOUNT_OF_ENEMIES);
         }
     }
@@ -108,7 +109,7 @@ function standOnTheBarrier(mario, marioSpeedX, marioPosX, object) {
     mario.jump = false;
 }
 
-function collision(mario, object, objType, window, dt, game) {
+function collision(mario, object, objType, viewPort, dt, game, point) {
     let marioPosX = mario.position.x;
     let marioPosY = mario.position.y;
     let marioSpeedX = mario.speed.x;
@@ -124,7 +125,7 @@ function collision(mario, object, objType, window, dt, game) {
                 collisionWithCoin(object);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(mario, window, game)
+                collisionWithEnemyWithLosingLife(mario, viewPort, game)
             }
         };
         
@@ -141,7 +142,7 @@ function collision(mario, object, objType, window, dt, game) {
                 collisionWithCoin(object);
             }
             if (objType == objectType.enemy) {
-                killEnemy(object);
+                killEnemy(object, point);
             }
         }
     } 
@@ -155,7 +156,7 @@ function collision(mario, object, objType, window, dt, game) {
                 collisionWithCoin(object);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(mario, window, game)
+                collisionWithEnemyWithLosingLife(mario, viewPort, game)
             }
         }
         
@@ -170,28 +171,28 @@ function collision(mario, object, objType, window, dt, game) {
                 collisionWithCoin(object);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(mario, window, game)
+                collisionWithEnemyWithLosingLife(mario, viewPort, game)
             }
         }
     }
 }
 
-function collisionWithObject(mario, window, dt, game, boxWidth) {
+function collisionWithObject(mario, viewPort, dt, game, boxWidth, point) {
     for (const coordinate of BRICK_LEDGE_ONES){
-        collision(mario, coordinate, objectType.barrier, window, dt, game);
+        collision(mario, coordinate, objectType.barrier, viewPort, dt, game, point);
     }
     for (const coordinate of ENEMY){
-        collision(mario, coordinate, objectType.enemy, window, dt, game);
+        collision(mario, coordinate, objectType.enemy, viewPort, dt, game, point);
     }
     for (const coordinate of BRICK_LEDGE) {
-        collision(mario, coordinate, objectType.barrier, window, dt, game);
+        collision(mario, coordinate, objectType.barrier, viewPort, dt, game, point);
     }
     for (const coordinate of COIN) {
-        collision(mario, coordinate, objectType.coin, window, dt, game);
+        collision(mario, coordinate, objectType.coin, viewPort, dt, game, point);
     }
     if (mario.position.x >= (boxWidth / 2)) {
-        window.x = -mario.position.x + window.width.width / 2;
+        viewPort.x = -mario.position.x + viewPort.width.width / 2;
     } else {
-        window.x = 0;
+        viewPort.x = 0;
     }
 };

@@ -1,5 +1,8 @@
 import {Vec2} from './vector.js';
 
+
+
+
 // x, y , width, height - в относительных
 export const BRICK_LEDGE_ONES = [
     [19, 7, 1, 2],
@@ -13,6 +16,9 @@ export const BRICK_LEDGE_ONES = [
     [96, 7, 1, 2],
     [100, 8, 1, 1]
 ];
+
+
+
 
 export const  BRICK_LEDGE = [
     [9, 4, 4, 1],
@@ -73,7 +79,7 @@ export const CASTLE = [
 ];
 
 export {UPDATES_PER_FRAME, MARIO_SIZE, EARTH_LINE, canvas, width, height, ctx, EARTH_TO_SKY, BRICK_SIZE, dx, ANTISPEED_VALUE, AIR_DECELERATION};
-export {Earth, Sky, Mario, Game, Window};
+export {Earth, Sky, Mario, Game, ViewPort};
 
 const MARIO_SIZE = 50;
 const EARTH_LINE = 0.9;
@@ -142,7 +148,7 @@ function Game({
     this.endTime = endTime;
 }
 
-function Window(width, height) {
+function ViewPort(width, height) {
     this.x = 0;
     this.y = 0;
     this.width = width;

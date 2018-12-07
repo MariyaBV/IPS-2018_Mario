@@ -19,9 +19,9 @@ function applyFrictionalForce({mario, dt}) {
     }
 }
 
-function moveMario({mario, dt, window}) {
+function moveMario({mario, dt, viewPort}) {
     if (mario.position.x > (STAFF[0][0] * 50  + 50)) {
-        mario.position = new Vec2(mario.position.x, window.width.height - 2 * MARIO_SIZE - 0.1);
+        mario.position = new Vec2(mario.position.x, viewPort.width.height - 2 * MARIO_SIZE - 0.1);
         const moveDistance = new Vec2(5, 0);
         while (mario.position.x < 110 * 50) {
             mario.position = mario.position.add(moveDistance);
@@ -32,11 +32,11 @@ function moveMario({mario, dt, window}) {
     }
 }
 
-function update({mario, boxWidth, boxHeight, dt, ctx, window, game}) {
+function update({mario, boxWidth, boxHeight, dt, ctx, viewPort, game, point}) {
     applyFrictionalForce({mario, dt, boxHeight});
     leftScreenCollision(mario);
     topScreenCollision(mario, dt);
-    bottomScreenCollision(mario, window);
-    collisionWithObject(mario, window, dt, game, boxWidth);
-    moveMario({mario, dt, window});
+    bottomScreenCollision(mario, viewPort);
+    collisionWithObject(mario, viewPort, dt, game, boxWidth, point);
+    moveMario({mario, dt, viewPort});
 }

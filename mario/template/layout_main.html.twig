@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block metaAndLink %}
+            {% include ("header.html.twig") %}
+        {% endblock %}
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        {% block menu %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block js %}
+            {% include("common/common_js.twig") %}
+        {% endblock %}
+    </body>
+</html>

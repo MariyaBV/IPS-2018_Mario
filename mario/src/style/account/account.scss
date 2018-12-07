@@ -1,0 +1,55 @@
+@import "const/const.scss";
+
+.b-account
+{
+    &__link
+    {
+        text-decoration: underline;
+        color: $blueFont;
+        font: 400 18px/28px $mainFont;
+        position: absolute;
+        bottom: -35px;
+        right: 18px;
+    }
+
+    &__input
+    {
+        position: relative;
+    }
+
+    &__button
+    {
+        padding: 10px;
+        font: 400 20px/24px "Source Sans Pro",sans-serif;
+
+        &_red
+        {
+            position: relative;
+            float: right;
+        }
+    }
+
+    &__buttons-block
+    {
+        margin-top: 75px;
+    }
+
+    &__explanation
+    {
+        position: absolute;
+        bottom: -30px;
+        right: 15px;
+        font: 400 16px/20px $mainFont;
+    }
+}
+
+@media screen and (max-width: 575px) 
+{
+    .b-account
+    {
+        &__form-group
+        {
+            margin-bottom: 15px; 
+        }
+    }
+}
