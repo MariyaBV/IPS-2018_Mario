@@ -1,5 +1,3 @@
-export {Vec2, Direction}
-
 function Vec2(x, y) {
     this.x = x;
     this.y = y;
@@ -21,11 +19,11 @@ function Vec2(x, y) {
     };
     this.length = function() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-    }
+    };
     this.normalize = function() {
         const length = this.length();
         return length ? this.divideScalar(this.length()) : new Vec2(0, 0);
-    }
+    };
 
     Object.freeze(this);
 }
@@ -36,5 +34,7 @@ const Direction = {
     DOWN: new Vec2(0, 1),
     LEFT: new Vec2(-1, 0),
     RIGHT: new Vec2(1, 0),
-}
+};
 Object.freeze(Direction);
+
+export {Vec2, Direction};

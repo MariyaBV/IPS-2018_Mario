@@ -1,42 +1,43 @@
-export {applyFrictionalForce, update};
 import {bottomScreenCollision, collisionWithObject, leftScreenCollision, topScreenCollision} from './collision.js';
 import {Vec2} from './vector.js';
-import {ANTISPEED_VALUE, STAFF, MARIO_SIZE} from './const.js';
+import {STAFF} from './objects.js';
+const ANTISPEED_VALUE = 800;
 
 const FREE_FALL_ACCELERATION = new Vec2(0, 400);
 
-function applyFrictionalForce({mario, dt}) {
-    mario.applyForce(FREE_FALL_ACCELERATION, dt, false);
-    if (!mario.run) {
-        const normalizedSpeed = mario.speed.normalize();
+function applyFrictionalForce({game, dt}) {
+    game.mario.applyForce(FREE_FALL_ACCELERATION, dt, false);
+    if (!game.mario.run) {
+        const normalizedSpeed = game.mario.speed.normalize();
         const antiForce = new Vec2(normalizedSpeed.x, 0).multiplyScalar(-1 * ANTISPEED_VALUE);
-        if (antiForce.multiplyScalar(dt).length() >= mario.speed.length()) {
-            mario.speed = new Vec2(0, mario.speed.y);
-        }
-        else {
-            mario.applyForce(antiForce, dt);
+        if (antiForce.multiplyScalar(dt).length() >= game.mario.speed.length()) {
+            game.mario.speed = new Vec2(0, game.mario.speed.y);
+        } else {
+            game.mario.applyForce(antiForce, dt);
         }
     }
 }
 
-function moveMario({mario, dt, viewPort}) {
-    if (mario.position.x > (STAFF[0][0] * 50  + 50)) {
-        mario.position = new Vec2(mario.position.x, viewPort.width.height - 2 * MARIO_SIZE - 0.1);
+function moveMario({dt, game}) {
+    if (game.mario.position.x > (STAFF[0][0] * 50 + 50)) {
+        game.mario.position = new Vec2(game.mario.position.x, game.viewPort.width.height - 2 * game.mario.size - 0.1);
         const moveDistance = new Vec2(5, 0);
-        while (mario.position.x < 110 * 50) {
-            mario.position = mario.position.add(moveDistance);
+        while (game.mario.position.x < 110 * 50) {
+            game.mario.position = game.mario.position.add(moveDistance);
         }
     } else {
-        const moveDistance = mario.speed.multiplyScalar(dt);
-        mario.position = mario.position.add(moveDistance);
+        const moveDistance = game.mario.speed.multiplyScalar(dt);
+        game.mario.position = game.mario.position.add(moveDistance);
     }
 }
 
-function update({mario, boxWidth, boxHeight, dt, ctx, viewPort, game, point}) {
-    applyFrictionalForce({mario, dt, boxHeight});
-    leftScreenCollision(mario);
-    topScreenCollision(mario, dt);
-    bottomScreenCollision(mario, viewPort);
-    collisionWithObject(mario, viewPort, dt, game, boxWidth, point);
-    moveMario({mario, dt, viewPort});
+function update({boxWidth, boxHeight, dt, game, point}) {
+    applyFrictionalForce({game, dt, boxHeight});
+    leftScreenCollision(game);
+    topScreenCollision(game);
+    bottomScreenCollision(game);
+    collisionWithObject(dt, game, boxWidth, point);
+    moveMario({dt, game});
 }
+
+export {applyFrictionalForce, update};

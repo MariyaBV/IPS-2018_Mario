@@ -1,5 +1,5 @@
 <?php
 require_once("inc/common.inc.php");
-$vars=[];
+$vars = [];
 
-echo getView('index.html.twig', $vars);
+echo getView('index/index.html.twig', $vars);

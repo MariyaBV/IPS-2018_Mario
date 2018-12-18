@@ -1,3 +1,17 @@
 {
-  "extends": "defaults/google"
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": "google",  
+  "rules": {
+    "max-len": 0,
+    "linebreak-style": "off",
+    "require-jsdoc": "off",
+    "indent": ["error", 4],
+    "spaced-comment": "off"
+  }
 }

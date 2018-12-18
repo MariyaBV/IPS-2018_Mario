@@ -1,1 +1,0 @@
-$('#registrationModal').modal('toggle');

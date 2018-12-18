@@ -1,25 +1,27 @@
-import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE, BRICK_SIZE, dx, MARIO_SIZE} from './const.js';
-export {redraw};
+import {dx} from './const_game.js';
+import {MARIO_SIZE} from './const_mario.js';
+import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE} from './objects.js';
+const BRICK_SIZE = 50;
 
-let earthImg = new Image();
-earthImg.src = "web/img/earth.png";
-let marioImg = new Image();
-marioImg.src = "web/img/mario.png";
-let brickImg = new Image();
-brickImg.src = "web/img/brick.png";
-let coinImg = new Image();
-coinImg.src = "web/img/coin.png";
-let enemyImg = new Image();
-enemyImg.src = "web/img/enemy.png";
-let ballImg = new Image();
-ballImg.src = "web/img/ball.png";
-let staffImg = new Image();
-staffImg.src = "web/img/staff.png";
-let castleImg = new Image();
-castleImg.src = "web/img/castle.png";
+const earthImg = new Image();
+earthImg.src = 'web/img/earth.png';
+const marioImg = new Image();
+marioImg.src = 'web/img/mario.png';
+const brickImg = new Image();
+brickImg.src = 'web/img/brick.png';
+const coinImg = new Image();
+coinImg.src = 'web/img/coin.png';
+const enemyImg = new Image();
+enemyImg.src = 'web/img/enemy.png';
+const ballImg = new Image();
+ballImg.src = 'web/img/ball.png';
+const staffImg = new Image();
+staffImg.src = 'web/img/staff.png';
+const castleImg = new Image();
+castleImg.src = 'web/img/castle.png';
 
-function drawMario({ctx, mario, boxWidth, boxHeight}) {
-    ctx.drawImage(marioImg, mario.position.x, mario.position.y , MARIO_SIZE, MARIO_SIZE);
+function drawMario({ctx, game}) {
+    ctx.drawImage(marioImg, game.mario.position.x, game.mario.position.y, MARIO_SIZE, MARIO_SIZE);
 }
 
 function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
@@ -34,53 +36,55 @@ function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
     }
 }
 
-function drawMap(mario, ctx, viewPort) {
-    let leftEdge, rightEdge;
-    if (mario.position.x / 50 <= 10) {
+function drawMap(ctx, game) {
+    let leftEdge; let rightEdge;
+    if (game.mario.position.x / 50 <= 10) {
         leftEdge = 0;
-        rightEdge = viewPort.width.width;
+        rightEdge = game.viewPort.width.width;
     } else {
-        leftEdge = mario.position.x / 50 - dx;
-        rightEdge = mario.position.x / 50 + dx;
+        leftEdge = game.mario.position.x / 50 - dx;
+        rightEdge = game.mario.position.x / 50 + dx;
     }
     //$.getJSON( "js/objects.json", function(data) {
-        drawObject(BRICK_LEDGE, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
-        drawObject(BRICK_LEDGE_ONES, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
-        drawObject(COIN, BRICK_SIZE, coinImg, rightEdge, leftEdge, ctx);
-        drawObject(ENEMY, BRICK_SIZE, enemyImg, rightEdge, leftEdge, ctx);
-        drawObject(BALL, BRICK_SIZE, ballImg, rightEdge, leftEdge, ctx);
-        drawObject(STAFF, BRICK_SIZE, staffImg, rightEdge, leftEdge, ctx);
+    drawObject(BRICK_LEDGE, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
+    drawObject(BRICK_LEDGE_ONES, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
+    drawObject(COIN, BRICK_SIZE, coinImg, rightEdge, leftEdge, ctx);
+    drawObject(ENEMY, BRICK_SIZE, enemyImg, rightEdge, leftEdge, ctx);
+    drawObject(BALL, BRICK_SIZE, ballImg, rightEdge, leftEdge, ctx);
+    drawObject(STAFF, BRICK_SIZE, staffImg, rightEdge, leftEdge, ctx);
 
-        for (const coordinate of CASTLE) {
-            ctx.drawImage(castleImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE * coordinate[2], BRICK_SIZE * coordinate[2]);
-        }
+    for (const coordinate of CASTLE) {
+        ctx.drawImage(castleImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE * coordinate[2], BRICK_SIZE * coordinate[2]);
+    }
 
-        for (const coordinate of EARTH) {
-            for (let i = coordinate[0]; i <= coordinate[1]; i++) {
-                ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
-            }
+    for (const coordinate of EARTH) {
+        for (let i = coordinate[0]; i <= coordinate[1]; i++) {
+            ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
         }
-        
+    }
+
     //})
 }
 
-function drawViewPort(viewPort, ctx, mario) {
-    if (viewPort.x !== 0) {
-        ctx.translate(viewPort.x, 0);
+function drawViewPort(game, ctx) {
+    if (game.viewPort.x !== 0) {
+        ctx.translate(game.viewPort.x, 0);
     }
 
-    drawMap(mario, ctx, viewPort);
+    drawMap(ctx, game);
 }
 
 
-function drawSky(ctx, boxWidth, boxHeight, sky) {    
+function drawSky(ctx, boxWidth, boxHeight) {
     ctx.fillStyle = '#3c78d8';
-    ctx.fillRect(sky.x, 0, boxWidth, boxHeight);
+    ctx.fillRect(0, 0, boxWidth, boxHeight);
 }
 
-function redraw({sky, earth, mario, boxWidth, boxHeight, ctx, viewPort}) {
+function redraw({boxWidth, boxHeight, ctx, game}) {
     ctx.resetTransform();
-    drawSky(ctx, boxWidth, boxHeight, sky);
-    drawViewPort(viewPort, ctx, mario, boxWidth);
-    drawMario({ctx, mario, boxWidth, boxHeight});
+    drawSky(ctx, boxWidth, boxHeight);
+    drawViewPort(game, ctx);
+    drawMario({ctx, game});
 }
+
+export {redraw};

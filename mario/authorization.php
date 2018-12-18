@@ -2,4 +2,4 @@
 require_once("inc/common.inc.php");
 $vars=[];
 
-echo getView('authorization.html.twig', $vars);
+echo getView('authorization/authorization.html.twig', $vars);

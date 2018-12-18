@@ -1,80 +1,32 @@
-import {UPDATES_PER_FRAME, MARIO_SIZE, EARTH_LINE, width, height, ctx, EARTH_TO_SKY} from './const.js';
-import {Earth, Sky, Mario, Game, ViewPort} from './const.js';
 import {redraw} from './draw.js';
-import {Vec2} from './vector.js';
 import {update} from './update.js';
 import {KeyMap, processKeyMap} from './key_map.js';
+import {showPoint} from './points.js';
+import {showGame} from './game.js';
+import {ctx, width, height} from './canvas.js';
+const UPDATES_PER_FRAME = 5;
 
 function main() {
-    const viewPort = new ViewPort({
-        startX: 0,
-        startY: 0,
-        width: width,
-        height: height
-    })
-
-    const earth = new Earth({
-        startX: 0,
-        startY: (1 - EARTH_TO_SKY) * height
-    });
-
-    const sky = new Sky({
-        startX: 0,
-        startY: 0
-    })
-
-    const mario = new Mario({
-        position: new Vec2((width - MARIO_SIZE) / 2 - 400 , height * EARTH_LINE - MARIO_SIZE - 100),
-        jump: false,
-        run: false,
-        keyUp: false
-    });
-    const keyMap = new KeyMap(mario);
-
-    const game = new Game({
-        finished: false,
-        startTime: Date.now(),
-        endTime: null,
-    })
-
-    const point = new PointerEvent({
-        pointOfCoin: onCoinCountChange,
-        pointOfLive: onLiveCountChange,
-        pointOfGumba: onGumbaCountChange,
-    })
-
-    const gumbaPoint = document.getElementById('gumba');
+    const game = showGame();
+    const goombaPoint = document.getElementById('goomba');
     const coinPoint = document.getElementById('coin');
     const livePoint = document.getElementById('live');
+    const point = showPoint(goombaPoint, coinPoint, livePoint);
+    const keyMap = new KeyMap(game);
 
-    function onCoinCountChange(value) {
-        coinPoint.textContent = value;
-    }
-
-    function onGumbaCountChange(value) {
-        gumbaPoint.textContent = value;
-    }
-
-    function onLiveCountChange(value) {
-        livePoint.textContent = value;
-    }
-
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener('keydown', (event) => {
         keyMap.onKeyDown(event.keyCode);
     });
 
-    document.addEventListener("keyup", (event) => {
+    document.addEventListener('keyup', (event) => {
         keyMap.onKeyUp(event.keyCode);
     });
 
     redraw({
-        sky,
-        earth,
-        mario,
-        width, 
-        height, 
+        width,
+        height,
         ctx,
-        viewPort
+        game,
     });
 
     let lastTimestamp = Date.now(); //текущее время в ms
@@ -84,49 +36,37 @@ function main() {
         lastTimestamp = currentTimeStamp;
 
         processKeyMap({
-            mario,
             keyMap,
             dt: deltaTime,
             boxHeight: height,
-            game
+            game,
         });
 
-        
-            for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
-                update({
-                    mario,
-                    boxWidth: width,
-                    boxHeight: height,
-                    dt: deltaTime / UPDATES_PER_FRAME,
-                    ctx,
-                    viewPort,
-                    game,
-                    point
-                });
-            }
-    
-    
-            redraw({
-                sky,
-                earth,
-                mario,
+        for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
+            update({
                 boxWidth: width,
                 boxHeight: height,
+                dt: deltaTime / UPDATES_PER_FRAME,
                 ctx,
-                viewPort
+                game,
+                point,
             });
+        }
 
-        
-       if (!game.finished) {
+        redraw({
+            boxWidth: width,
+            boxHeight: height,
+            ctx,
+            game,
+        });
+
+        if (!game.finished) {
             requestAnimationFrame(animateFn);
-       } else {
-        document.location.href = "http://localhost/end_of_game.php";
-        //header("Location: http://localhost/web/end_of_game.html"); 
-        //exit();
-    }
-    }
+        } else {
+            document.location.href = '/end_of_game.php';
+        }
+    };
     animateFn();
 };
-
 
 main();

@@ -1,0 +1,17 @@
+{% extends "layout_main.html.twig" %}
+
+{% block title %}Registration{% endblock %}
+
+{% block menu %}
+    {% include("menu_heading.html.twig")%}
+{% endblock %}
+
+{% block content %}
+    {% include("registration/form_registration.html.twig") %}
+{% endblock %}
+
+{% block js %}
+    {% include("common/common_js.twig") %}
+    <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="web/js/form.js"></script>
+{% endblock %}

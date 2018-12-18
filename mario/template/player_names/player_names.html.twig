@@ -1,0 +1,11 @@
+{% extends "layout_main.html.twig" %}
+
+{% block title %}Player names{% endblock %}
+
+{% block menu %}
+    {% include("menu_heading.html.twig")%}
+{% endblock %}
+
+{% block content %}
+    {% include("player_names/form_players.html.twig") %}
+{% endblock %}
