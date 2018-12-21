@@ -5,14 +5,17 @@
 {% block menu %}
     <div class="container-fluid b-container my-lg-4 my-sm-2">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <h1 class="b-canvas-wrapper__title">MARIO<span class="b-main-page__title b-main-page__title_small">x2</span></h1>
             </div>
-            <div class=" col-md-8">
-                <div class="row justify-content-lg-end justify-content-md-center">
+            <div class=" col-lg-8">
+                <div class="row justify-content-lg-end">
                     <div class="b-canvas-wrapper__block-menu">
                         <div class="col-12 mb-2">
-                            <img class="b-canvas-wrapper__img" src="web/img/mario.png"/>
+                            <div class="b-canvas-wrapper__img-block">
+                                <img class="b-canvas-wrapper__img" src="web/img/mario.png"/>
+                                <span class="b-canvas-wrapper__gamer-name">{{gamer1}}</span>
+                            </div>
                             <div class="b-canvas-wrapper__all-point">
                                 <div class="b-canvas-wrapper__point-description">
                                     <span class="b-canvas-wrapper__point-title">монеты</span>
@@ -32,7 +35,10 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <img class="b-canvas-wrapper__img" src="web/img/luidzhi.png"/>
+                            <div class="b-canvas-wrapper__img-block">
+                                <img class="b-canvas-wrapper__img" src="web/img/luidzhi.png"/>
+                                <span class="b-canvas-wrapper__gamer-name">{{gamer2}}</span>
+                            </div>
                             <div class="b-canvas-wrapper__all-point">
                                 <div class="b-canvas-wrapper__point-description">
                                     <span class="b-canvas-wrapper__point-title">монеты</span>
@@ -50,7 +56,7 @@
                                     <div class="b-canvas-wrapper__point" >0</div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>                       
                     </div>
                 </div>
             </div>
@@ -63,6 +69,6 @@
 {% endblock %}
 
 {% block js %}
+    {{ parent() }}
     <script src="web/js/index.js" type="module"></script>
-    {% include("common/common_js.twig") %}
 {% endblock %}

@@ -1,6 +1,5 @@
-import {Game, ViewPort} from './const_game.js';
 import {Vec2} from './vector.js';
-import {EARTH_LINE} from './const_game.js';
+import {EARTH_LINE, Game, ViewPort} from './const_game.js';
 import {MARIO_SIZE, Mario} from './const_mario.js';
 import {width, height} from './canvas.js';
 

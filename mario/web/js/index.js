@@ -4,6 +4,7 @@ import {KeyMap, processKeyMap} from './key_map.js';
 import {showPoint} from './points.js';
 import {showGame} from './game.js';
 import {ctx, width, height} from './canvas.js';
+import {pointsToSession} from './session.js';
 const UPDATES_PER_FRAME = 5;
 
 function main() {
@@ -63,6 +64,7 @@ function main() {
         if (!game.finished) {
             requestAnimationFrame(animateFn);
         } else {
+            pointsToSession();
             document.location.href = '/end_of_game.php';
         }
     };

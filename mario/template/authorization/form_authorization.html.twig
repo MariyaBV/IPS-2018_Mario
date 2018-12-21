@@ -6,14 +6,16 @@
     </div>
     <div class="row align-middle">
         <div class="col-md-6 col-xs-12 offset-md-3">
-            <form>
+            <form method="post">
                 <div class="form-group b-authorization__form-group">
-                    <input type="email" class="form-control b-authorization__input" id="login" placeholder="Введите email">
+                    <input type="email" name="email" required class="form-control b-authorization__input" id="login" placeholder="Введите email">
                 </div>
                 <div class="form-group b-authorization__form-group">
-                    <input type="password" class="form-control b-authorization__input" id="inputPassword" placeholder="Пароль">
+                    <input type="password" required name="password" class="form-control b-authorization__input" id="inputPassword" placeholder="Пароль">
+                    <a class="b-authorization__link" href="/registration.php">Еще не зарегистрированы?</a>
+                    <p class="error-text">{{error}}</p>
                 </div>
-                    <a href="/action_choice.php"><button type="button" class="btn btn-primary b-authorization__button">Войти</button></a>
+                    <button type="submit" class="btn btn-primary b-authorization__button">Войти</button>
             </form>
         </div>
     </div>

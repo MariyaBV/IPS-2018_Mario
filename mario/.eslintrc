@@ -8,7 +8,9 @@
   },
   "extends": "google",  
   "rules": {
-    "max-len": 0,
+    "max-len": ["error", {
+      "code": 120
+    }],
     "linebreak-style": "off",
     "require-jsdoc": "off",
     "indent": ["error", 4],

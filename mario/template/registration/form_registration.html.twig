@@ -8,16 +8,18 @@
         <div class="col-md-6 col-xs-12 offset-md-3">
             <form method="post">
                 <div class="form-group b-authorization__form-group">
-                    <input name="email" type="text" class="form-control b-authorization__input" id="loginAuthorization" placeholder="Введите email">
+                    <input name="email" type="text" required class="form-control b-authorization__input" id="loginAuthorization" placeholder="Введите email">
                 </div>
                 <div class="form-group b-authorization__form-group">
                     <input name="username" type="text" class="form-control b-authorization__input" id="nameAuthorization" placeholder="Введите Имя">
                 </div>
                 <div class="form-group b-authorization__form-group">
-                    <input name="password" type="password" class="form-control b-authorization__input" id="inputPasswordAuthorization" placeholder="Пароль">
+                    <input name="password" type="password" required class="form-control b-authorization__input" id="inputPasswordAuthorization" placeholder="Пароль">
                 </div>
                 <div class="form-group b-authorization__form-group">
-                    <input name="repeat_password" type="password" class="form-control b-authorization__input" id="repeatPassword" placeholder="Повторите пароль">
+                    <input name="repeat_password" type="password" required class="form-control b-authorization__input" id="repeatPassword" placeholder="Повторите пароль">
+                    <a class="b-authorization__link" href="/authorization.php">Уже зарегистрированы?</a>
+                    <p class="error-text">{{error}}</p>
                 </div>
                 <button name="register" type="submit" class="btn btn-primary b-authorization__button" data-toggle="modal" data-target="#registrationModal">Зарегистрироваться</button>
             </form>

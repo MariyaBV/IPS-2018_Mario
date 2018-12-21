@@ -11,7 +11,6 @@
 {% endblock %}
 
 {% block js %}
-    {% include("common/common_js.twig") %}
+    {{ parent() }}
     <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="web/js/form.js"></script>
 {% endblock %}

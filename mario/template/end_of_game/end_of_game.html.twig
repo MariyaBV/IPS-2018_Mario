@@ -9,3 +9,7 @@
 {% block content %}
     {% include("end_of_game/form_end_game.html.twig") %}
 {% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}

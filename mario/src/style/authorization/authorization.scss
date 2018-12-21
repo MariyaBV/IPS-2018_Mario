@@ -32,6 +32,12 @@
         font: 900 40px/48px $mainFont;
         color: $blueFont;
     }
+
+    &__link
+    {
+        display: block;
+        margin-bottom: 20px;
+    }
 }
 
 @media screen and (max-width: 1450px) 

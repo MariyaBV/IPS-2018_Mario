@@ -45,7 +45,6 @@ function drawMap(ctx, game) {
         leftEdge = game.mario.position.x / 50 - dx;
         rightEdge = game.mario.position.x / 50 + dx;
     }
-    //$.getJSON( "js/objects.json", function(data) {
     drawObject(BRICK_LEDGE, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(BRICK_LEDGE_ONES, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(COIN, BRICK_SIZE, coinImg, rightEdge, leftEdge, ctx);
@@ -62,8 +61,6 @@ function drawMap(ctx, game) {
             ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
         }
     }
-
-    //})
 }
 
 function drawViewPort(game, ctx) {

@@ -2,7 +2,7 @@
 
 function startSession()
 {
-    session_name("mario");
+    session_name("sessionId");
     session_start();
 }
 

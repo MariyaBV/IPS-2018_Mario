@@ -104,11 +104,7 @@ function standOnTheBarrier(game, marioSpeedX, marioPosX, object) {
     game.mario.jump = false;
 }
 
-function collision(object, objType, dt, game, point) {
-    const marioPosX = game.mario.position.x;
-    const marioPosY = game.mario.position.y;
-    const marioSpeedX = game.mario.speed.x;
-
+function objectOnTop(marioPosX, marioPosY, object, objType, objectType, game, point) {
     if (marioPositionXRelativeToObject(marioPosX, object)) {
         if (isFloatEqual(marioPosY, (object[1] + object[3]) * OBJECT_HEIGHT, 1)) {
             console.log('sverhu pryamoug');
@@ -122,8 +118,12 @@ function collision(object, objType, dt, game, point) {
             if (objType == objectType.enemy) {
                 collisionWithEnemyWithLosingLife(game, point);
             }
-        };
+        }
+    }
+}
 
+function objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, point, marioSpeedX, dt) {
+    if (marioPositionXRelativeToObject(marioPosX, object)) {
         if (isFloatEqual(marioPosY + MARIO_SIZE, object[1] * OBJECT_HEIGHT, 1)) {
             const moveDistance = game.mario.speed.multiplyScalar(dt);
             game.mario.position = game.mario.position.add(moveDistance);
@@ -139,6 +139,9 @@ function collision(object, objType, dt, game, point) {
             }
         }
     }
+}
+
+function objectOnRight(marioPosX, marioPosY, object, objType, objectType, point, game) {
     if (isFloatEqual(marioPosX + MARIO_SIZE, object[0] * OBJECT_WIDTH, 1)) {
         if (marioPositionYRelativeToObject(marioPosY, object)) {
             console.log('sprava');
@@ -153,6 +156,9 @@ function collision(object, objType, dt, game, point) {
             }
         }
     }
+}
+
+function objectOnLeft(marioPosX, marioPosY, object, objType, objectType, point, game) {
     if (isFloatEqual(marioPosX, (object[0] + object[2]) * OBJECT_WIDTH, 1)) {
         if (marioPositionYRelativeToObject(marioPosY, object)) {
             console.log('sleva');
@@ -167,6 +173,17 @@ function collision(object, objType, dt, game, point) {
             }
         }
     }
+}
+
+function collision(object, objType, dt, game, point) {
+    const marioPosX = game.mario.position.x;
+    const marioPosY = game.mario.position.y;
+    const marioSpeedX = game.mario.speed.x;
+
+    if (objectOnTop(marioPosX, marioPosY, object, objType, objectType, game, point));
+    if (objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, point, marioSpeedX, dt));
+    if (objectOnRight(marioPosX, marioPosY, object, objType, objectType, point, game));
+    if (objectOnLeft(marioPosX, marioPosY, object, objType, objectType, point, game));
 }
 
 function collisionWithObject(dt, game, width, point) {
@@ -189,4 +206,12 @@ function collisionWithObject(dt, game, width, point) {
     }
 };
 
-export {bottomScreenCollision, leftScreenCollision, topScreenCollision, collisionWithObject};
+export {
+    bottomScreenCollision,
+    leftScreenCollision,
+    topScreenCollision,
+    collisionWithObject,
+    AMOUNT_OF_ENEMIES,
+    AMOUNT_OF_COINS,
+    NUMBER_OF_LIVES,
+};
