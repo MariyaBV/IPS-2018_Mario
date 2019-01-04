@@ -1,4 +1,4 @@
-import {dx} from './const_game.js';
+import {dx, ViewPort} from './const_game.js';
 import {MARIO_SIZE} from './const_mario.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE} from './objects.js';
 const BRICK_SIZE = 50;
@@ -36,11 +36,11 @@ function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
     }
 }
 
-function drawMap(ctx, game) {
+function drawMap(ctx, game, viewPort) {
     let leftEdge; let rightEdge;
     if (game.mario.position.x / 50 <= 10) {
         leftEdge = 0;
-        rightEdge = game.viewPort.width.width;
+        rightEdge = viewPort.width;
     } else {
         leftEdge = game.mario.position.x / 50 - dx;
         rightEdge = game.mario.position.x / 50 + dx;
@@ -58,17 +58,40 @@ function drawMap(ctx, game) {
 
     for (const coordinate of EARTH) {
         for (let i = coordinate[0]; i <= coordinate[1]; i++) {
-            ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * coordinate[2], BRICK_SIZE, BRICK_SIZE);
+            for (let j = coordinate[2]; j < coordinate[3]; j++) {
+                ctx.drawImage(earthImg, BRICK_SIZE * i, BRICK_SIZE * j, BRICK_SIZE, BRICK_SIZE);
+            }
         }
     }
 }
 
-function drawViewPort(game, ctx) {
-    if (game.viewPort.x !== 0) {
-        ctx.translate(game.viewPort.x, 0);
-    }
+function drawViewPort(game, ctx, viewPort) {
+    const x = Math.min(0, -viewPort.x); //min - 0, max - worldWidth
+    let y; //min - 0, max - worldHeight
+    // let headerHeight = document.getElementById('header').offsetHeight;
+    // let footerHeight = document.getElementById('footer').offsetHeight;
+    let windowHeight = window.innerHeight;
+    // let windowWidth = window.innerWidth;
+    // let newViewPortHeight = windowHeight - footerHeight - headerHeight;
+    // console.log('y = ', y);
+    // console.log('viewPort.y = ', viewPort.y);
+    // console.log('newViewPortHeight = ', newViewPortHeight);
+    if (windowHeight > 1030) {
+        y = Math.max(200, -viewPort.y);
+    } else if (windowHeight > 930) {
+        y = Math.max(100, -viewPort.y);
+    } else if (windowHeight > 830) {
+        y = Math.max(0, -viewPort.y);
+    } else if (windowHeight > 730) {
+        y = Math.max(-100, -viewPort.y);
+    } else if (windowHeight > 630) {
+        y = Math.max(-200, -viewPort.y);
+    } else {
+        y = Math.max(-150, -viewPort.y);
+    };
+    ctx.translate(x, y);
 
-    drawMap(ctx, game);
+    drawMap(ctx, game, viewPort);
 }
 
 
@@ -77,10 +100,39 @@ function drawSky(ctx, boxWidth, boxHeight) {
     ctx.fillRect(0, 0, boxWidth, boxHeight);
 }
 
-function redraw({boxWidth, boxHeight, ctx, game}) {
+function redraw({viewPortWidth, viewPortHeight, ctx1, ctx2, game}) {
+    const viewPort1 = new ViewPort({
+        x: game.mario.position.x + MARIO_SIZE / 2 - viewPortWidth / 2,
+        y: game.mario.position.y + MARIO_SIZE / 2 - viewPortHeight / 2,
+        width: viewPortWidth,
+        height: viewPortHeight,
+    });
+    redrawImpl({
+        viewPortWidth,
+        viewPortHeight,
+        ctx: ctx1,
+        game,
+        viewPort: viewPort1,
+    });
+    const viewPort2 = new ViewPort({
+        x: 250,
+        y: 250,
+        width: viewPortWidth,
+        height: viewPortHeight,
+    });
+    redrawImpl({
+        viewPortWidth,
+        viewPortHeight,
+        ctx: ctx2,
+        game,
+        viewPort: viewPort2,
+    });
+}
+
+function redrawImpl({viewPortWidth, viewPortHeight, ctx, game, viewPort}) {
     ctx.resetTransform();
-    drawSky(ctx, boxWidth, boxHeight);
-    drawViewPort(game, ctx);
+    drawSky(ctx, viewPortWidth, viewPortHeight);
+    drawViewPort(game, ctx, viewPort);
     drawMario({ctx, game});
 }
 

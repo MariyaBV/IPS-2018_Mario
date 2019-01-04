@@ -48,7 +48,7 @@ function collisionWithCoin(object, point) {
         if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
             COIN.splice(i, 1);
             AMOUNT_OF_COINS ++;
-            point.pointOfCoin(AMOUNT_OF_COINS);
+            pointMario.pointOfCoin(AMOUNT_OF_COINS);
             console.log('Количество монет = ', AMOUNT_OF_COINS);
         }
     }
@@ -56,7 +56,7 @@ function collisionWithCoin(object, point) {
 
 function collisionWithEnemyWithLosingLife(game, point) {
     NUMBER_OF_LIVES --;
-    point.pointOfLive(NUMBER_OF_LIVES);
+    pointMario.pointOfLive(NUMBER_OF_LIVES);
     console.log('Количество ЖИЗНЕЙ = ', NUMBER_OF_LIVES);
     game.mario.position = getStartPosition();
     if (NUMBER_OF_LIVES == 0) {
@@ -78,7 +78,7 @@ function killEnemy(object, point) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES ++;
-            point.pointOfGoomba(AMOUNT_OF_ENEMIES);
+            pointMario.pointOfGoomba(AMOUNT_OF_ENEMIES);
             console.log('Количество убитых ENEMIES = ', AMOUNT_OF_ENEMIES);
         }
     }

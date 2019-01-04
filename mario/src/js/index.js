@@ -2,17 +2,17 @@ import {redraw} from './draw.js';
 import {update} from './update.js';
 import {KeyMap, processKeyMap} from './key_map.js';
 import {showPoint} from './points.js';
-import {showGame} from './game.js';
-import {ctx, width, height} from './canvas.js';
+import {showGame, getStartPosition, getStartPositionLui} from './game.js';
+import {ctx1, ctx2, getCanvasSize} from './canvas.js';
 import {pointsToSession} from './session.js';
 const UPDATES_PER_FRAME = 5;
 
 function main() {
     const game = showGame();
-    const goombaPoint = document.getElementById('goomba');
-    const coinPoint = document.getElementById('coin');
-    const livePoint = document.getElementById('live');
-    const point = showPoint(goombaPoint, coinPoint, livePoint);
+    const goombaPointOfMario = document.getElementById('goombaMario');
+    const coinPointOfMario = document.getElementById('coinMario');
+    const livePointOfMario = document.getElementById('liveMario');
+    const point = showPoint(goombaPointOfMario, coinPointOfMario, livePointOfMario);
     const keyMap = new KeyMap(game);
 
     document.addEventListener('keydown', (event) => {
@@ -23,10 +23,13 @@ function main() {
         keyMap.onKeyUp(event.keyCode);
     });
 
+    const {width, height} = getCanvasSize();
+
     redraw({
-        width,
-        height,
-        ctx,
+        viewPortWidth: width,
+        viewPortHeight: height,
+        ctx1,
+        ctx2,
         game,
     });
 
@@ -39,25 +42,31 @@ function main() {
         processKeyMap({
             keyMap,
             dt: deltaTime,
-            boxHeight: height,
             game,
         });
 
+        const {width, height} = getCanvasSize();
+
         for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
             update({
-                boxWidth: width,
-                boxHeight: height,
+                boxHeight: 500,
                 dt: deltaTime / UPDATES_PER_FRAME,
-                ctx,
                 game,
                 point,
             });
+            if (!game.mario.position) {
+                game.mario.position = getStartPosition();
+            }
+            // if (!game.luidzhi.position) {
+            //     game.luidzhi.position = getStartPositionLui();
+            // }
         }
 
         redraw({
-            boxWidth: width,
-            boxHeight: height,
-            ctx,
+            viewPortWidth: width,
+            viewPortHeight: height,
+            ctx1,
+            ctx2,
             game,
         });
 
@@ -65,7 +74,9 @@ function main() {
             requestAnimationFrame(animateFn);
         } else {
             pointsToSession();
-            document.location.href = '/end_of_game.php';
+            setTimeout(function() {
+                document.location.href = '/end_of_game.php';
+            }, 10000);
         }
     };
     animateFn();

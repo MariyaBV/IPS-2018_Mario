@@ -15,7 +15,8 @@ function pointsToSession() {
     };
 
     $.post('info_to_session.php', JSON.stringify(points));
-    console.log('pointsToSession', AMOUNT_OF_COINS, NUMBER_OF_LIVES, AMOUNT_OF_ENEMIES);
+    //$.post('info_to_session.php', {'coin': AMOUNT_OF_COINS});
+    console.log('pointsToSession', points);
 };
 
 export {pointsToSession};

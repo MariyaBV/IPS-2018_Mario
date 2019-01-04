@@ -7,13 +7,11 @@ function Mario({
     position,
     jump,
     run,
-    size,
 }) {
     this.position = position;
     this.speed = new Vec2(0, 0);
     this.jump = jump;
     this.run = run;
-    this.size = size;
 
     this.applyForce = function(force, dt) {
         this.speed = this.speed.add(force.multiplyScalar(dt));

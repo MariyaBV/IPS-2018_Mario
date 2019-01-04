@@ -64,7 +64,7 @@ const STAFF = [
 ];
 
 const EARTH = [
-    [0, 122, 9],
+    [0, 122, 9, 12],
 ];
 
 const CASTLE = [

@@ -11,9 +11,9 @@ function Earth({
     this.y = startY;
 }
 
-function ViewPort(width, height) {
-    this.x = 0;
-    this.y = 0;
+function ViewPort({x, y, width, height}) {
+    this.x = x;
+    this.y = y;
     this.width = width;
     this.height = height;
 }
@@ -22,13 +22,11 @@ function Game({
     finished,
     startTime,
     endTime,
-    viewPort,
     mario,
 }) {
     this.finished = finished;
     this.startTime = startTime;
     this.endTime = endTime;
-    this.viewPort = viewPort;
     this.mario = mario;
 }
 

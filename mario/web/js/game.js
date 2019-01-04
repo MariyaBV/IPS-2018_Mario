@@ -1,21 +1,21 @@
 import {Vec2} from './vector.js';
-import {EARTH_LINE, Game, ViewPort} from './const_game.js';
+import {EARTH_LINE, Game} from './const_game.js';
 import {MARIO_SIZE, Mario} from './const_mario.js';
-import {width, height} from './canvas.js';
+import {LUIDZHI_SIZE, Luidzhi} from './const_luidzhi.js';
 
 function showGame() {
     const game = new Game({
         finished: false,
         startTime: Date.now(),
         endTime: null,
-        viewPort: new ViewPort({
-            startX: 0,
-            startY: 0,
-            width: width,
-            height: height,
-        }),
         mario: new Mario({
-            position: new Vec2((width - MARIO_SIZE) / 2 - 400, height * EARTH_LINE - MARIO_SIZE - 100),
+            position: getStartPosition(),
+            jump: false,
+            run: false,
+            keyUp: false,
+        }),
+        luidzhi: new Luidzhi({
+            position: getStartPositionLui(),
             jump: false,
             run: false,
             keyUp: false,
@@ -25,4 +25,12 @@ function showGame() {
     return game;
 }
 
-export {showGame};
+function getStartPosition() {
+    return new Vec2((200 - MARIO_SIZE) / 2 - 400, 500 * EARTH_LINE - MARIO_SIZE - 100);
+}
+
+function getStartPositionLui() {
+    return new Vec2((200 - LUIDZHI_SIZE) / 2 - 350, 500 * EARTH_LINE - LUIDZHI_SIZE - 100);
+}
+
+export {showGame, getStartPosition, getStartPositionLui};
