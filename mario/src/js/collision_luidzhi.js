@@ -1,5 +1,5 @@
 import {getStartPositionLui} from './game.js';
-import {LUIDZHI_SIZE} from './const_mario.js';
+import {LUIDZHI_SIZE} from './const_luidzhi.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY} from './objects.js';
 import {isFloatEqual} from './compare.js';
 import {Vec2} from './vector.js';
@@ -15,50 +15,50 @@ const objectType = {
     enemy: 3,
 };
 
-function bottomScreenCollision(game) {
-    if (game.mario.position.y > 500 - 2 * LUIDZHI_SIZE) {
-        game.mario.speed = new Vec2(game.mario.speed.x, 0);
-        game.mario.jump = false;
-        game.mario.position = new Vec2(game.mario.position.x, 500 - OBJECT_HEIGHT - LUIDZHI_SIZE - 0.1);
-        game.mario.keyUp = false;
+function bottomScreenCollisionLui(game) {
+    if (game.luidzhiInfo.luidzhi.position.y > 500 - 2 * LUIDZHI_SIZE) {
+        game.luidzhiInfo.luidzhi.speed = new Vec2(game.luidzhiInfo.luidzhi.speed.x, 0);
+        game.luidzhiInfo.luidzhi.jump = false;
+        game.luidzhiInfo.luidzhi.position = new Vec2(game.luidzhiInfo.luidzhi.position.x, 500 - OBJECT_HEIGHT - LUIDZHI_SIZE - 0.1);
+        game.luidzhiInfo.luidzhi.keyUp = false;
     }
 }
 
-function leftScreenCollision(game) {
-    if (game.mario.position.x <= 0) {
-        game.mario.position = new Vec2(0, game.mario.position.y);
-        game.mario.speed = game.mario.speed.add(new Vec2(0, 20));
+function leftScreenCollisionLui(game) {
+    if (game.luidzhiInfo.luidzhi.position.x <= 0) {
+        game.luidzhiInfo.luidzhi.position = new Vec2(0, game.luidzhiInfo.luidzhi.position.y);
+        game.luidzhiInfo.luidzhi.speed = game.luidzhiInfo.luidzhi.speed.add(new Vec2(0, 20));
     }
 }
 
-function marioPositionXRelativeToObject(marioPosX, object) {
-    return ((marioPosX > (object[0] * OBJECT_WIDTH)) && (marioPosX < (object[0] + object[2]) * OBJECT_WIDTH)) ||
-        (((marioPosX + LUIDZHI_SIZE) > (object[0] * OBJECT_WIDTH)) &&
-        ((marioPosX + LUIDZHI_SIZE) < (object[0] + object[2]) * OBJECT_WIDTH));
+function luidzhiPositionXRelativeToObject(luidzhiPosX, object) {
+    return ((luidzhiPosX > (object[0] * OBJECT_WIDTH)) && (luidzhiPosX < (object[0] + object[2]) * OBJECT_WIDTH)) ||
+        (((luidzhiPosX + LUIDZHI_SIZE) > (object[0] * OBJECT_WIDTH)) &&
+        ((luidzhiPosX + LUIDZHI_SIZE) < (object[0] + object[2]) * OBJECT_WIDTH));
 }
 
-function marioPositionYRelativeToObject(marioPosY, object) {
-    return ((marioPosY > (object[1] * OBJECT_HEIGHT)) && (marioPosY < (object[1] + object[3]) * OBJECT_HEIGHT)) ||
-        (((marioPosY + LUIDZHI_SIZE) > (object[1] * OBJECT_HEIGHT)) &&
-        ((marioPosY + 50) < (object[1] + object[3]) * OBJECT_HEIGHT));
+function luidzhiPositionYRelativeToObject(luidzhiPosY, object) {
+    return ((luidzhiPosY > (object[1] * OBJECT_HEIGHT)) && (luidzhiPosY < (object[1] + object[3]) * OBJECT_HEIGHT)) ||
+        (((luidzhiPosY + LUIDZHI_SIZE) > (object[1] * OBJECT_HEIGHT)) &&
+        ((luidzhiPosY + 50) < (object[1] + object[3]) * OBJECT_HEIGHT));
 }
 
-function collisionWithCoin(object, point) {
+function collisionWithCoin(object, game) {
     for (let i = 0; i < COIN.length; i++) {
         if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
             COIN.splice(i, 1);
             AMOUNT_OF_COINS_LUIDZHI ++;
-            point.pointOfCoin(AMOUNT_OF_COINS_LUIDZHI);
-            console.log('Количество монет = ', AMOUNT_OF_COINS_LUIDZHI);
+            game.luidzhiInfo.point.pointOfCoin(AMOUNT_OF_COINS_LUIDZHI);
+            console.log('Количество монет Lui = ', AMOUNT_OF_COINS_LUIDZHI);
         }
     }
 }
 
-function collisionWithEnemyWithLosingLife(game, point) {
+function collisionWithEnemyWithLosingLife(game) {
     NUMBER_OF_LIVES_LUIDZHI --;
-    point.pointOfLive(NUMBER_OF_LIVES_LUIDZHI);
-    console.log('Количество ЖИЗНЕЙ = ', NUMBER_OF_LIVES_LUIDZHI);
-    game.mario.position = getStartPositionLui();
+    game.luidzhiInfo.point.pointOfLive(NUMBER_OF_LIVES_LUIDZHI);
+    console.log('Количество ЖИЗНЕЙ Lui = ', NUMBER_OF_LIVES_LUIDZHI);
+    game.luidzhiInfo.luidzhi.position = getStartPositionLui();
     if (NUMBER_OF_LIVES_LUIDZHI == 0) {
         alert('GAME OVER!');
         game.finished = true;
@@ -66,132 +66,132 @@ function collisionWithEnemyWithLosingLife(game, point) {
 }
 
 function collisionAtSideOfBarrier(game, isLeftCollision) {
-    const speedY = game.mario.speed.y;
+    const speedY = game.luidzhiInfo.luidzhi.speed.y;
     const speedX = isLeftCollision
-        ? Math.max(game.mario.speed.x, 0)
-        : Math.min(game.mario.speed.x, 0);
-    game.mario.speed = new Vec2(speedX, speedY);
+        ? Math.max(game.luidzhiInfo.luidzhi.speed.x, 0)
+        : Math.min(game.luidzhiInfo.luidzhi.speed.x, 0);
+    game.luidzhiInfo.luidzhi.speed = new Vec2(speedX, speedY);
 }
 
-function killEnemy(object, point) {
+function killEnemy(object, game) {
     for (let j = 0; j < ENEMY.length; j++) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES_LUIDZHI ++;
-            point.pointOfGoomba(AMOUNT_OF_ENEMIES_LUIDZHI);
-            console.log('Количество убитых ENEMIES = ', AMOUNT_OF_ENEMIES_LUIDZHI);
+            game.luidzhiInfo.point.pointOfGoomba(AMOUNT_OF_ENEMIES_LUIDZHI);
+            console.log('Количество убитых ENEMIES Lui = ', AMOUNT_OF_ENEMIES_LUIDZHI);
         }
     }
 }
 
-function standOnTheBarrier(game, marioSpeedX, marioPosX, object) {
-    game.mario.speed = new Vec2(marioSpeedX, 0);
-    game.mario.position = new Vec2(marioPosX, object[1] * OBJECT_WIDTH - LUIDZHI_SIZE - 1.1);
-    game.mario.keyUp = false;
-    game.mario.jump = false;
+function standOnTheBarrier(game, luidzhiSpeedX, luidzhiPosX, object) {
+    game.luidzhiInfo.luidzhi.speed = new Vec2(luidzhiSpeedX, 0);
+    game.luidzhiInfo.luidzhi.position = new Vec2(luidzhiPosX, object[1] * OBJECT_WIDTH - LUIDZHI_SIZE - 1.1);
+    game.luidzhiInfo.luidzhi.keyUp = false;
+    game.luidzhiInfo.luidzhi.jump = false;
 }
 
-function objectOnTop(marioPosX, marioPosY, object, objType, objectType, game, point) {
-    if (marioPositionXRelativeToObject(marioPosX, object)) {
-        if (isFloatEqual(marioPosY, (object[1] + object[3]) * OBJECT_HEIGHT, 1)) {
+function objectOnTop(luidzhiPosX, luidzhiPosY, object, objType, objectType, game) {
+    if (luidzhiPositionXRelativeToObject(luidzhiPosX, object)) {
+        if (isFloatEqual(luidzhiPosY, (object[1] + object[3]) * OBJECT_HEIGHT, 1)) {
             //console.log('sverhu pryamoug');
             if (objType == objectType.barrier) {
-                const speed = game.mario.speed.y;
-                game.mario.speed = new Vec2(0, -speed);
+                const speed = game.luidzhiInfo.luidzhi.speed.y;
+                game.luidzhiInfo.luidzhi.speed = new Vec2(0, -speed);
             };
             if (objType == objectType.coin) {
-                collisionWithCoin(object, point);
+                collisionWithCoin(object, game);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(game, point);
+                collisionWithEnemyWithLosingLife(game);
             }
         }
     }
 }
 
-function objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, point, marioSpeedX, dt) {
-    if (marioPositionXRelativeToObject(marioPosX, object)) {
-        if (isFloatEqual(marioPosY + LUIDZHI_SIZE, object[1] * OBJECT_HEIGHT, 1)) {
-            const moveDistance = game.mario.speed.multiplyScalar(dt);
-            game.mario.position = game.mario.position.add(moveDistance);
+function objectOnDown(luidzhiPosX, luidzhiPosY, object, objType, objectType, game, luidzhiSpeedX, dt) {
+    if (luidzhiPositionXRelativeToObject(luidzhiPosX, object)) {
+        if (isFloatEqual(luidzhiPosY + LUIDZHI_SIZE, object[1] * OBJECT_HEIGHT, 1)) {
+            const moveDistance = game.luidzhiInfo.luidzhi.speed.multiplyScalar(dt);
+            game.luidzhiInfo.luidzhi.position = game.luidzhiInfo.luidzhi.position.add(moveDistance);
             //console.log('snizu pryamoug');
             if (objType == objectType.barrier) {
-                standOnTheBarrier(game, marioSpeedX, marioPosX, object);
+                standOnTheBarrier(game, luidzhiSpeedX, luidzhiPosX, object);
             }
             if (objType == objectType.coin) {
-                collisionWithCoin(object, point);
+                collisionWithCoin(object, game);
             }
             if (objType == objectType.enemy) {
-                killEnemy(object, point);
+                killEnemy(object, game);
             }
         }
     }
 }
 
-function objectOnRight(marioPosX, marioPosY, object, objType, objectType, point, game) {
-    if (isFloatEqual(marioPosX + LUIDZHI_SIZE, object[0] * OBJECT_WIDTH, 1)) {
-        if (marioPositionYRelativeToObject(marioPosY, object)) {
+function objectOnRight(luidzhiPosX, luidzhiPosY, object, objType, objectType, game) {
+    if (isFloatEqual(luidzhiPosX + LUIDZHI_SIZE, object[0] * OBJECT_WIDTH, 1)) {
+        if (luidzhiPositionYRelativeToObject(luidzhiPosY, object)) {
             //console.log('sprava');
             if (objType == objectType.barrier) {
                 collisionAtSideOfBarrier(game, false);
             }
             if (objType == objectType.coin) {
-                collisionWithCoin(object, point);
+                collisionWithCoin(object, game);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(game, point);
+                collisionWithEnemyWithLosingLife(game);
             }
         }
     }
 }
 
-function objectOnLeft(marioPosX, marioPosY, object, objType, objectType, point, game) {
-    if (isFloatEqual(marioPosX, (object[0] + object[2]) * OBJECT_WIDTH, 1)) {
-        if (marioPositionYRelativeToObject(marioPosY, object)) {
+function objectOnLeft(luidzhiPosX, luidzhiPosY, object, objType, objectType, game) {
+    if (isFloatEqual(luidzhiPosX, (object[0] + object[2]) * OBJECT_WIDTH, 1)) {
+        if (luidzhiPositionYRelativeToObject(luidzhiPosY, object)) {
             //console.log('sleva');
             if (objType == objectType.barrier) {
                 collisionAtSideOfBarrier(game, true);
             }
             if (objType == objectType.coin) {
-                collisionWithCoin(object, point);
+                collisionWithCoin(object, game);
             }
             if (objType == objectType.enemy) {
-                collisionWithEnemyWithLosingLife(game, point);
+                collisionWithEnemyWithLosingLife(game);
             }
         }
     }
 }
 
-function collision(object, objType, dt, game, point) {
-    const marioPosX = game.mario.position.x;
-    const marioPosY = game.mario.position.y;
-    const marioSpeedX = game.mario.speed.x;
+function collision(object, objType, dt, game) {
+    const luidzhiPosX = game.luidzhiInfo.luidzhi.position.x;
+    const luidzhiPosY = game.luidzhiInfo.luidzhi.position.y;
+    const luidzhiSpeedX = game.luidzhiInfo.luidzhi.speed.x;
 
-    if (objectOnTop(marioPosX, marioPosY, object, objType, objectType, game, point));
-    if (objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, point, marioSpeedX, dt));
-    if (objectOnRight(marioPosX, marioPosY, object, objType, objectType, point, game));
-    if (objectOnLeft(marioPosX, marioPosY, object, objType, objectType, point, game));
+    if (objectOnTop(luidzhiPosX, luidzhiPosY, object, objType, objectType, game));
+    if (objectOnDown(luidzhiPosX, luidzhiPosY, object, objType, objectType, game, luidzhiSpeedX, dt));
+    if (objectOnRight(luidzhiPosX, luidzhiPosY, object, objType, objectType, game));
+    if (objectOnLeft(luidzhiPosX, luidzhiPosY, object, objType, objectType, game));
 }
 
-function collisionWithObject(dt, game, point) {
+function collisionWithObjectLui(dt, game) {
     for (const coordinate of BRICK_LEDGE_ONES) {
-        collision(coordinate, objectType.barrier, dt, game, point);
+        collision(coordinate, objectType.barrier, dt, game);
     }
     for (const coordinate of ENEMY) {
-        collision(coordinate, objectType.enemy, dt, game, point);
+        collision(coordinate, objectType.enemy, dt, game);
     }
     for (const coordinate of BRICK_LEDGE) {
-        collision(coordinate, objectType.barrier, dt, game, point);
+        collision(coordinate, objectType.barrier, dt, game);
     }
     for (const coordinate of COIN) {
-        collision(coordinate, objectType.coin, dt, game, point);
+        collision(coordinate, objectType.coin, dt, game);
     }
 };
 
 export {
-    bottomScreenCollision,
-    leftScreenCollision,
-    collisionWithObject,
+    bottomScreenCollisionLui,
+    leftScreenCollisionLui,
+    collisionWithObjectLui,
     AMOUNT_OF_ENEMIES_LUIDZHI,
     AMOUNT_OF_COINS_LUIDZHI,
     NUMBER_OF_LIVES_LUIDZHI,

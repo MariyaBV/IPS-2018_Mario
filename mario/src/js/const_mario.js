@@ -3,6 +3,18 @@ import {Vec2} from './vector.js';
 const MARIO_SIZE = 50;
 Mario.MAX_SPEED = 200; // для максимальной скорости
 
+function MarioInfo({
+    firstFinish,
+    keyMap,
+    mario,
+    point,
+}) {
+    this.firstFinish = firstFinish;
+    this.keyMap = keyMap;
+    this.mario = mario;
+    this.point = point;
+}
+
 function Mario({
     position,
     jump,
@@ -22,4 +34,4 @@ function Mario({
     };
 }
 
-export {MARIO_SIZE, Mario};
+export {MARIO_SIZE, Mario, MarioInfo};

@@ -1,7 +1,6 @@
 const EARTH_LINE = 0.9;
 const EARTH_TO_SKY = 0.1;
 const dx = 15;
-//const AIR_DECELERATION = 0;
 
 function Earth({
     startX,
@@ -22,12 +21,14 @@ function Game({
     finished,
     startTime,
     endTime,
-    mario,
+    marioInfo,
+    luidzhiInfo,
 }) {
     this.finished = finished;
     this.startTime = startTime;
     this.endTime = endTime;
-    this.mario = mario;
+    this.marioInfo = marioInfo;
+    this.luidzhiInfo = luidzhiInfo;
 }
 
 function Point({

@@ -1,5 +1,6 @@
 import {dx, ViewPort} from './const_game.js';
 import {MARIO_SIZE} from './const_mario.js';
+import {LUIDZHI_SIZE} from './const_luidzhi.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE} from './objects.js';
 const BRICK_SIZE = 50;
 
@@ -7,6 +8,8 @@ const earthImg = new Image();
 earthImg.src = 'web/img/earth.png';
 const marioImg = new Image();
 marioImg.src = 'web/img/mario.png';
+const luidzhiImg = new Image();
+luidzhiImg.src = 'web/img/luidzhi.png';
 const brickImg = new Image();
 brickImg.src = 'web/img/brick.png';
 const coinImg = new Image();
@@ -21,7 +24,11 @@ const castleImg = new Image();
 castleImg.src = 'web/img/castle.png';
 
 function drawMario({ctx, game}) {
-    ctx.drawImage(marioImg, game.mario.position.x, game.mario.position.y, MARIO_SIZE, MARIO_SIZE);
+    ctx.drawImage(marioImg, game.marioInfo.mario.position.x, game.marioInfo.mario.position.y, MARIO_SIZE, MARIO_SIZE);
+}
+
+function drawLuidzhi({ctx, game}) {
+    ctx.drawImage(luidzhiImg, game.luidzhiInfo.luidzhi.position.x, game.luidzhiInfo.luidzhi.position.y, LUIDZHI_SIZE, LUIDZHI_SIZE);
 }
 
 function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
@@ -37,14 +44,26 @@ function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
 }
 
 function drawMap(ctx, game, viewPort) {
-    let leftEdge; let rightEdge;
-    if (game.mario.position.x / 50 <= 10) {
-        leftEdge = 0;
-        rightEdge = viewPort.width;
-    } else {
-        leftEdge = game.mario.position.x / 50 - dx;
-        rightEdge = game.mario.position.x / 50 + dx;
-    }
+    let leftEdge;
+    let rightEdge;
+    if (ctx == canvas2.getContext('2d')) {
+        if (game.marioInfo.mario.position.x / 50 <= 10) {
+            leftEdge = 0;
+            rightEdge = viewPort.width;
+        } else {
+            leftEdge = game.marioInfo.mario.position.x / 50 - dx;
+            rightEdge = game.marioInfo.mario.position.x / 50 + dx;
+        }
+    } else if (ctx == canvas1.getContext('2d')) {
+        if (game.luidzhiInfo.luidzhi.position.x / 50 <= 10) {
+            leftEdge = 0;
+            rightEdge = viewPort.width;
+        } else {
+            leftEdge = game.luidzhiInfo.luidzhi.position.x / 50 - dx;
+            rightEdge = game.luidzhiInfo.luidzhi.position.x / 50 + dx;
+        }
+    };
+
     drawObject(BRICK_LEDGE, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(BRICK_LEDGE_ONES, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(COIN, BRICK_SIZE, coinImg, rightEdge, leftEdge, ctx);
@@ -67,15 +86,8 @@ function drawMap(ctx, game, viewPort) {
 
 function drawViewPort(game, ctx, viewPort) {
     const x = Math.min(0, -viewPort.x); //min - 0, max - worldWidth
-    let y; //min - 0, max - worldHeight
-    // let headerHeight = document.getElementById('header').offsetHeight;
-    // let footerHeight = document.getElementById('footer').offsetHeight;
+    let y;
     let windowHeight = window.innerHeight;
-    // let windowWidth = window.innerWidth;
-    // let newViewPortHeight = windowHeight - footerHeight - headerHeight;
-    // console.log('y = ', y);
-    // console.log('viewPort.y = ', viewPort.y);
-    // console.log('newViewPortHeight = ', newViewPortHeight);
     if (windowHeight > 1030) {
         y = Math.max(200, -viewPort.y);
     } else if (windowHeight > 930) {
@@ -102,8 +114,8 @@ function drawSky(ctx, boxWidth, boxHeight) {
 
 function redraw({viewPortWidth, viewPortHeight, ctx1, ctx2, game}) {
     const viewPort1 = new ViewPort({
-        x: game.mario.position.x + MARIO_SIZE / 2 - viewPortWidth / 2,
-        y: game.mario.position.y + MARIO_SIZE / 2 - viewPortHeight / 2,
+        x: game.luidzhiInfo.luidzhi.position.x + LUIDZHI_SIZE / 2 - viewPortWidth / 2,
+        y: game.luidzhiInfo.luidzhi.position.y + LUIDZHI_SIZE / 2 - viewPortHeight / 2,
         width: viewPortWidth,
         height: viewPortHeight,
     });
@@ -115,8 +127,8 @@ function redraw({viewPortWidth, viewPortHeight, ctx1, ctx2, game}) {
         viewPort: viewPort1,
     });
     const viewPort2 = new ViewPort({
-        x: 250,
-        y: 250,
+        x: game.marioInfo.mario.position.x + MARIO_SIZE / 2 - viewPortWidth / 2,
+        y: game.marioInfo.mario.position.y + MARIO_SIZE / 2 - viewPortHeight / 2,
         width: viewPortWidth,
         height: viewPortHeight,
     });
@@ -134,6 +146,7 @@ function redrawImpl({viewPortWidth, viewPortHeight, ctx, game, viewPort}) {
     drawSky(ctx, viewPortWidth, viewPortHeight);
     drawViewPort(game, ctx, viewPort);
     drawMario({ctx, game});
+    drawLuidzhi({ctx, game});
 }
 
 export {redraw};

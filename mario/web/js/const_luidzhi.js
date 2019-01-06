@@ -3,6 +3,18 @@ import {Vec2} from './vector.js';
 const LUIDZHI_SIZE = 50;
 Luidzhi.MAX_SPEED = 200; // для максимальной скорости
 
+function LuidzhiInfo({
+    firstFinish,
+    keyMap,
+    luidzhi,
+    point,
+}) {
+    this.firstFinish = firstFinish;
+    this.keyMap = keyMap;
+    this.luidzhi = luidzhi;
+    this.point = point;
+}
+
 function Luidzhi({
     position,
     jump,
@@ -21,4 +33,4 @@ function Luidzhi({
     };
 }
 
-export {LUIDZHI_SIZE, Luidzhi};
+export {LUIDZHI_SIZE, Luidzhi, LuidzhiInfo};
