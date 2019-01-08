@@ -1,5 +1,6 @@
 import {getStartPosition} from './game.js';
 import {MARIO_SIZE} from './const_mario.js';
+import {PLAYER_SIZE} from './const_player.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY} from './objects.js';
 import {isFloatEqual} from './compare.js';
 import {Vec2} from './vector.js';
@@ -9,18 +10,31 @@ const OBJECT_WIDTH = 50;
 let AMOUNT_OF_COINS = 0;
 let AMOUNT_OF_ENEMIES = 0;
 let NUMBER_OF_LIVES = 3;
-const objectType = {
-    barrier: 1,
+const objectType = {//OBJECT_TYPE
+    barrier: 1, //BARRIER
     coin: 2,
     enemy: 3,
 };
 
+// for (const arr of arrs)
+// {
+//     const [x, y, w, h] = arr;
+//     new DisplayObject({
+//         x,
+//         y,
+//         w,
+//         h,
+//     })
+// }
+
+
 function bottomScreenCollision(game) {
-    if (game.marioInfo.mario.position.y > 500 - 2 * MARIO_SIZE) {
-        game.marioInfo.mario.speed = new Vec2(game.marioInfo.mario.speed.x, 0);
-        game.marioInfo.mario.jump = false;
-        game.marioInfo.mario.position = new Vec2(game.marioInfo.mario.position.x, 500 - OBJECT_HEIGHT - MARIO_SIZE - 0.1);
-        game.marioInfo.mario.keyUp = false;
+    const mario = game.marioInfo.mario;
+    if (mario.position.y > 500 - 2 * MARIO_SIZE) {
+        mario.speed = new Vec2(mario.speed.x, 0);
+        mario.jump = false;
+        mario.position = new Vec2(mario.position.x, 500 - OBJECT_HEIGHT - MARIO_SIZE - 0.1);
+        mario.keyUp = false;
     }
 }
 
@@ -47,8 +61,8 @@ function collisionWithCoin(object, game) {
     for (let i = 0; i < COIN.length; i++) {
         if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
             COIN.splice(i, 1);
-            AMOUNT_OF_COINS ++;
-            game.marioInfo.point.pointOfCoin(AMOUNT_OF_COINS);
+            AMOUNT_OF_COINS ++;//amountOfCoins для всех переменных в верхн регистре
+            game.marioInfo.count.countOfCoin(AMOUNT_OF_COINS);
             console.log('Количество монет = ', AMOUNT_OF_COINS);
         }
     }
@@ -56,7 +70,7 @@ function collisionWithCoin(object, game) {
 
 function collisionWithEnemyWithLosingLife(game) {
     NUMBER_OF_LIVES --;
-    game.marioInfo.point.pointOfLive(NUMBER_OF_LIVES);
+    game.marioInfo.count.countOfLive(NUMBER_OF_LIVES);
     console.log('Количество ЖИЗНЕЙ = ', NUMBER_OF_LIVES);
     game.marioInfo.mario.position = getStartPosition();
     if (NUMBER_OF_LIVES == 0) {
@@ -78,13 +92,13 @@ function killEnemy(object, game) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES ++;
-            game.marioInfo.point.pointOfGoomba(AMOUNT_OF_ENEMIES);
+            game.marioInfo.count.countOfGoomba(AMOUNT_OF_ENEMIES);
             console.log('Количество убитых ENEMIES = ', AMOUNT_OF_ENEMIES);
         }
     }
 }
 
-function standOnTheBarrier(game, marioSpeedX, marioPosX, object) {
+function standOnTheBarrier(game, marioSpeedX, marioPosX, object) {// где можно сделать типа mario = game.marioInfo.mario
     game.marioInfo.mario.speed = new Vec2(marioSpeedX, 0);
     game.marioInfo.mario.position = new Vec2(marioPosX, object[1] * OBJECT_WIDTH - MARIO_SIZE - 1.1);
     game.marioInfo.mario.keyUp = false;
@@ -167,24 +181,24 @@ function collision(object, objType, dt, game) {
     const marioPosY = game.marioInfo.mario.position.y;
     const marioSpeedX = game.marioInfo.mario.speed.x;
 
-    if (objectOnTop(marioPosX, marioPosY, object, objType, objectType, game));
-    if (objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, marioSpeedX, dt));
-    if (objectOnRight(marioPosX, marioPosY, object, objType, objectType, game));
-    if (objectOnLeft(marioPosX, marioPosY, object, objType, objectType, game));
+    objectOnTop(marioPosX, marioPosY, object, objType, objectType, game);
+    objectOnDown(marioPosX, marioPosY, object, objType, objectType, game, marioSpeedX, dt);
+    objectOnRight(marioPosX, marioPosY, object, objType, objectType, game);
+    objectOnLeft(marioPosX, marioPosY, object, objType, objectType, game);
 }
 
 function collisionWithObject(dt, game) {
     for (const coordinate of BRICK_LEDGE_ONES) {
         collision(coordinate, objectType.barrier, dt, game);
     }
-    for (const coordinate of ENEMY) {
-        collision(coordinate, objectType.enemy, dt, game);
-    }
     for (const coordinate of BRICK_LEDGE) {
         collision(coordinate, objectType.barrier, dt, game);
     }
     for (const coordinate of COIN) {
         collision(coordinate, objectType.coin, dt, game);
+    }
+    for (const coordinate of ENEMY) {
+        collision(coordinate, objectType.enemy, dt, game);
     }
 };
 
@@ -195,4 +209,8 @@ export {
     AMOUNT_OF_ENEMIES,
     AMOUNT_OF_COINS,
     NUMBER_OF_LIVES,
+    OBJECT_HEIGHT,
+    OBJECT_WIDTH,
+    objectType,
+    marioPositionYRelativeToObject,
 };

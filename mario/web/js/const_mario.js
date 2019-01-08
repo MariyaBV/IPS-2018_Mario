@@ -7,12 +7,12 @@ function MarioInfo({
     firstFinish,
     keyMap,
     mario,
-    point,
+    count,
 }) {
     this.firstFinish = firstFinish;
     this.keyMap = keyMap;
     this.mario = mario;
-    this.point = point;
+    this.count = count;
 }
 
 function Mario({

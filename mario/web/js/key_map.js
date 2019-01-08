@@ -1,4 +1,4 @@
-import {KeyCode} from './keyCode.js';
+import {KeyCode} from './key_сode.js';
 import {Vec2, Direction} from './vector.js';
 import {STAFF} from './objects.js';
 
@@ -9,6 +9,11 @@ function KeyMap(game) {
 
     this.onKeyDown = function(keyCode) {
         this._map[keyCode] = true;
+        if ((keyCode == 32) && (!game.stop)) {
+            game.stop = true;
+        } else if ((keyCode == 32) && (game.stop)) {
+            game.stop = false;
+        }
     };
 
     this.onKeyUp = function(keyCode) {
@@ -26,6 +31,41 @@ function KeyMap(game) {
     };
 
     Object.freeze(this);
+}
+
+function processKeyMapForPlayer(dt, game, playerInfo, player) {
+    //player = game.marioInfo.mario, playerInfo = game.marioInfo
+    const MOVE_SPEED = 200;
+    let wasProcessed = false;
+    let directionForce = Vec2.ZERO;
+    player.run = false;
+
+    if (keyMap.isPressed(KeyCode.LEFT_ARROW)) {
+        directionForce = directionForce.add(Direction.LEFT);
+        wasProcessed = true;
+        player.run = true;
+    }
+    if (keyMap.isPressed(KeyCode.RIGHT_ARROW)) {
+        directionForce = directionForce.add(Direction.RIGHT);
+        wasProcessed = true;
+        player.run = true;
+    }
+    if ((player.position.x > (STAFF[0][0] * 50 + 50)) && (!game.finished)) {
+        wasProcessed = false;
+        game.finished = true;
+        playerInfo.firstFinish = true;
+        console.log('marioFirstFinish = ', playerInfo.firstFinish);
+    }
+    if (wasProcessed) {
+        player.applyForce(directionForce.normalize().multiplyScalar(MOVE_SPEED), dt);
+    }
+    if (keyMap.isPressed(KeyCode.UP_ARROW) && !player.jump) {
+        player.jump = true;
+        player.speed = player.speed.add(new Vec2(0, -500));
+        wasProcessed = true;
+    }
+
+    return wasProcessed;
 }
 
 function processKeyMapForMario({keyMap, dt, game}) {
@@ -98,10 +138,4 @@ function processKeyMapForLuidzhi({keyMap, dt, game}) {
     return wasProcessed;
 }
 
-
-function processKeyMap({keyMap, dt, game}) {
-    processKeyMapForMario({keyMap, dt, game});
-    processKeyMapForLuidzhi({keyMap, dt, game});
-}
-
-export {KeyMap, processKeyMap, processKeyMapForMario, processKeyMapForLuidzhi};
+export {KeyMap, processKeyMapForMario, processKeyMapForLuidzhi};

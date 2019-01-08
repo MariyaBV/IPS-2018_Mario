@@ -1,14 +1,18 @@
-import {bottomScreenCollision, collisionWithObject, leftScreenCollision} from './collision_mario.js';
+import {bottomScreenCollision, collisionWithObject, leftScreenCollision} from './collision_player.js';
 import {bottomScreenCollisionLui, collisionWithObjectLui, leftScreenCollisionLui} from './collision_luidzhi.js';
 import {Vec2} from './vector.js';
 import {STAFF} from './objects.js';
 import {MARIO_SIZE} from './const_mario.js';
+import {PLAYER_SIZE} from './const_player.js';
 import {LUIDZHI_SIZE} from './const_luidzhi.js';
+import {enemyCollisionWithWall} from './collision_enemy.js';
+import {moveEnemy} from './move_enemy.js';
 
 const ANTISPEED_VALUE = 800;
 const FREE_FALL_ACCELERATION = new Vec2(0, 400);
 
 function applyFrictionalForce({game, dt}) {
+    // избавиться от дублирования
     game.marioInfo.mario.applyForce(FREE_FALL_ACCELERATION, dt, false);
     if (!game.marioInfo.mario.run) {
         const normalizedSpeed = game.marioInfo.mario.speed.normalize();
@@ -58,14 +62,20 @@ function moveLuidzhi({dt, game, boxHeight}) {
     }
 }
 
-function update({boxHeight, dt, game}) {
+function update({boxHeight, dt, game}) { // rotateCoin сделать
+    enemyCollisionWithWall();
+    moveEnemy();
     applyFrictionalForce({game, dt, boxHeight});
+    
+    // избавиться от дублирования
     leftScreenCollision(game);
     bottomScreenCollision(game);
     collisionWithObject(dt, game);
+    
     leftScreenCollisionLui(game);
     bottomScreenCollisionLui(game);
     collisionWithObjectLui(dt, game);
+    
     moveMario({dt, game, boxHeight});
     moveLuidzhi({dt, game, boxHeight});
 }

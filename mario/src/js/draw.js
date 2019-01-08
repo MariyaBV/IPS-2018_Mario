@@ -1,6 +1,8 @@
 import {dx, ViewPort} from './const_game.js';
 import {MARIO_SIZE} from './const_mario.js';
 import {LUIDZHI_SIZE} from './const_luidzhi.js';
+import {PLAYER_SIZE} from './const_player.js';
+import {ENEMY_SIZE} from './move_enemy.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY, BALL, STAFF, EARTH, CASTLE} from './objects.js';
 const BRICK_SIZE = 50;
 
@@ -28,7 +30,13 @@ function drawMario({ctx, game}) {
 }
 
 function drawLuidzhi({ctx, game}) {
-    ctx.drawImage(luidzhiImg, game.luidzhiInfo.luidzhi.position.x, game.luidzhiInfo.luidzhi.position.y, LUIDZHI_SIZE, LUIDZHI_SIZE);
+    ctx.drawImage(
+        luidzhiImg,
+        game.luidzhiInfo.luidzhi.position.x,
+        game.luidzhiInfo.luidzhi.position.y,
+        LUIDZHI_SIZE,
+        LUIDZHI_SIZE
+    );
 }
 
 function drawObject(object, objectSize, objectImg, rightEdge, leftEdge, ctx) {
@@ -67,12 +75,18 @@ function drawMap(ctx, game, viewPort) {
     drawObject(BRICK_LEDGE, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(BRICK_LEDGE_ONES, BRICK_SIZE, brickImg, rightEdge, leftEdge, ctx);
     drawObject(COIN, BRICK_SIZE, coinImg, rightEdge, leftEdge, ctx);
-    drawObject(ENEMY, BRICK_SIZE, enemyImg, rightEdge, leftEdge, ctx);
+    drawObject(ENEMY, ENEMY_SIZE, enemyImg, rightEdge, leftEdge, ctx);
     drawObject(BALL, BRICK_SIZE, ballImg, rightEdge, leftEdge, ctx);
     drawObject(STAFF, BRICK_SIZE, staffImg, rightEdge, leftEdge, ctx);
 
     for (const coordinate of CASTLE) {
-        ctx.drawImage(castleImg, BRICK_SIZE * coordinate[0], BRICK_SIZE * coordinate[1], BRICK_SIZE * coordinate[2], BRICK_SIZE * coordinate[2]);
+        ctx.drawImage(
+            castleImg,
+            BRICK_SIZE * coordinate[0],
+            BRICK_SIZE * coordinate[1],
+            BRICK_SIZE * coordinate[2],
+            BRICK_SIZE * coordinate[2]
+        );
     }
 
     for (const coordinate of EARTH) {
@@ -87,19 +101,19 @@ function drawMap(ctx, game, viewPort) {
 function drawViewPort(game, ctx, viewPort) {
     const x = Math.min(0, -viewPort.x); //min - 0, max - worldWidth
     let y;
-    let windowHeight = window.innerHeight;
+    const windowHeight = window.innerHeight;
     if (windowHeight > 1030) {
-        y = Math.max(200, -viewPort.y);
+        y = Math.max(250, -viewPort.y);
     } else if (windowHeight > 930) {
-        y = Math.max(100, -viewPort.y);
+        y = Math.max(150, -viewPort.y);
     } else if (windowHeight > 830) {
-        y = Math.max(0, -viewPort.y);
+        y = Math.max(50, -viewPort.y);
     } else if (windowHeight > 730) {
-        y = Math.max(-100, -viewPort.y);
+        y = Math.max(-50, -viewPort.y);
     } else if (windowHeight > 630) {
-        y = Math.max(-200, -viewPort.y);
-    } else {
         y = Math.max(-150, -viewPort.y);
+    } else {
+        y = Math.max(50, -viewPort.y);
     };
     ctx.translate(x, y);
 

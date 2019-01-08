@@ -7,12 +7,12 @@ function LuidzhiInfo({
     firstFinish,
     keyMap,
     luidzhi,
-    point,
+    count,
 }) {
     this.firstFinish = firstFinish;
     this.keyMap = keyMap;
     this.luidzhi = luidzhi;
-    this.point = point;
+    this.count = count;
 }
 
 function Luidzhi({

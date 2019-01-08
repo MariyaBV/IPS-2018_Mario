@@ -8,6 +8,7 @@ require_once("inc/const.inc.php");
 require_once("inc/user.inc.php");
 require_once("inc/request.inc.php");
 require_once("inc/error_constants.inc.php");
+require_once("inc/compare.inc.php");
 
 const DOCUMENT_ROOT_LW5 = 'C:/dev-project/php7';
 

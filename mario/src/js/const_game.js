@@ -18,12 +18,14 @@ function ViewPort({x, y, width, height}) {
 }
 
 function Game({
+    stop,
     finished,
     startTime,
     endTime,
     marioInfo,
     luidzhiInfo,
 }) {
+    this.stop = stop;
     this.finished = finished;
     this.startTime = startTime;
     this.endTime = endTime;
@@ -31,15 +33,15 @@ function Game({
     this.luidzhiInfo = luidzhiInfo;
 }
 
-function Point({
-    pointOfCoin,
-    pointOfLive,
-    pointOfGoomba,
+function Count({
+    countOfCoin,
+    countOfLive,
+    countOfGoomba,
 }) {
-    this.pointOfCoin = pointOfCoin;
-    this.pointOfLive = pointOfLive;
-    this.pointOfGoomba = pointOfGoomba;
+    this.countOfCoin = countOfCoin;
+    this.countOfLive = countOfLive;
+    this.countOfGoomba = countOfGoomba;
 }
 
 export {EARTH_LINE, EARTH_TO_SKY, dx};
-export {Earth, Game, ViewPort, Point};
+export {Earth, Game, ViewPort, Count};

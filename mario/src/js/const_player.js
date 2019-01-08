@@ -1,21 +1,21 @@
 import {Vec2} from './vector.js';
 
-const MARIO_SIZE = 50;
-Mario.MAX_SPEED = 200; // для максимальной скорости
+const PLAYER_SIZE = 50;
+Player.MAX_SPEED = 200; // для максимальной скорости
 
-function MarioInfo({
+function PlayerInfo({
     firstFinish,
     keyMap,
-    mario,
+    player,
     count,
 }) {
     this.firstFinish = firstFinish;
     this.keyMap = keyMap;
-    this.mario = mario;
+    this.player = player;
     this.count = count;
 }
 
-function Mario({
+function Player({
     position,
     jump,
     run,
@@ -28,10 +28,10 @@ function Mario({
     this.applyForce = function(force, dt) {
         this.speed = this.speed.add(force.multiplyScalar(dt));
         //const speedVecLength = this.speed.length();
-        if (this.speed.x > Mario.MAX_SPEED) {
-            this.speed = new Vec2(Mario.MAX_SPEED, this.speed.y);
+        if (this.speed.x > Player.MAX_SPEED) {
+            this.speed = new Vec2(Player.MAX_SPEED, this.speed.y);
         }
     };
 }
 
-export {MARIO_SIZE, Mario, MarioInfo};
+export {PLAYER_SIZE, Player, PlayerInfo};

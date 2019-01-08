@@ -1,25 +1,6 @@
-import {AMOUNT_OF_ENEMIES, AMOUNT_OF_COINS, NUMBER_OF_LIVES} from './collision_mario.js';
+import {AMOUNT_OF_ENEMIES, AMOUNT_OF_COINS, NUMBER_OF_LIVES} from './collision_player.js';
 import {AMOUNT_OF_ENEMIES_LUIDZHI, AMOUNT_OF_COINS_LUIDZHI, NUMBER_OF_LIVES_LUIDZHI} from './collision_luidzhi.js';
-import {score} from './points.js';
-
-function pointsToSession() {
-    const points = {
-        mario: {
-            'coin': AMOUNT_OF_COINS,
-            'live': NUMBER_OF_LIVES,
-            'goomba': AMOUNT_OF_ENEMIES,
-        },
-        luidzhi: {
-            'coin': AMOUNT_OF_COINS_LUIDZHI,
-            'live': NUMBER_OF_LIVES_LUIDZHI,
-            'goomba': AMOUNT_OF_ENEMIES_LUIDZHI,
-        },
-    };
-
-    $.post('info_to_session.php', JSON.stringify(points));
-    //$.post('info_to_session.php', {'coin': AMOUNT_OF_COINS});
-    console.log('pointsToSession', points);
-};
+import {score} from './counts.js';
 
 function scoreOfPlayers(game) {
     let marioScore;
@@ -39,12 +20,48 @@ function scoreOfPlayers(game) {
         luidzhiScore = score(AMOUNT_OF_ENEMIES_LUIDZHI, AMOUNT_OF_COINS_LUIDZHI, NUMBER_OF_LIVES_LUIDZHI);
     }
 
-    return [marioScore, luidzhiScore];
+    const playersCounts = {
+        'marioScore': marioScore,
+        'luidzhiScore': luidzhiScore,
+    };
+    return playersCounts;
 }
 
-function scoreToSession(game) {
-    console.log(scoreOfPlayers(game));
-    $.post('info_to_session.php', scoreOfPlayers(game));
+function countsToSession(game) {
+    const playersCounts = scoreOfPlayers(game);
+    const counts = {
+        mario: {
+            'coin': AMOUNT_OF_COINS,
+            'live': NUMBER_OF_LIVES,
+            'goomba': AMOUNT_OF_ENEMIES,
+        },
+        luidzhi: {
+            'coin': AMOUNT_OF_COINS_LUIDZHI,
+            'live': NUMBER_OF_LIVES_LUIDZHI,
+            'goomba': AMOUNT_OF_ENEMIES_LUIDZHI,
+        },
+        playersCounts,
+    };
+
+    $.post('mario.php', counts, function(data) {onComplete(data)});
+    console.log('countsToSession', counts);
+};
+
+function onComplete(response) {
+    if (response == 7) {
+        window.location = 'end_of_game.php';
+    } else {
+        console.log('данные не передались');
+    }
 }
 
-export {pointsToSession, scoreToSession};
+function getAnAnswer() {
+    $.ajax({
+        url: 'mario.php',
+        type: 'POST',
+        dataType: 'json',
+        complete: onComplete,
+    });
+}
+
+export {countsToSession, getAnAnswer};

@@ -1,10 +1,12 @@
 import {Vec2} from './vector.js';
 import {EARTH_LINE, Game} from './const_game.js';
 import {MARIO_SIZE, Mario, MarioInfo} from './const_mario.js';
-import {LUIDZHI_SIZE, Luidzhi, LuidzhiInfo} from './const_luidzhi.js';
+import {Luidzhi, LuidzhiInfo} from './const_luidzhi.js';
+import {KeyCode} from './key_сode.js';
 
-function showGame() {
+function createGame() {
     const game = new Game({
+        stop: false,
         finished: false,
         startTime: Date.now(),
         endTime: null,
@@ -16,15 +18,25 @@ function showGame() {
                 run: false,
                 keyUp: false,
             }),
+            manageKeys: {
+                LEFT: KeyCode.LEFT_ARROW,
+                RIGHT: KeyCode.RIGHT_ARROW,
+                UP: KeyCode.UP_ARROW,
+            },
         }),
         luidzhiInfo: new LuidzhiInfo({
             firstFinish: false,
             luidzhi: new Luidzhi({
-                position: getStartPositionLui(),
+                position: getStartPosition(),
                 jump: false,
                 run: false,
                 keyUp: false,
             }),
+            manageKeys: {
+                LEFT: KeyCode.KEY_A,
+                RIGHT: KeyCode.KEY_D,
+                UP: KeyCode.KEY_W,
+            },
         }),
     });
 
@@ -35,8 +47,4 @@ function getStartPosition() {
     return new Vec2((200 - MARIO_SIZE) / 2 - 400, 500 * EARTH_LINE - MARIO_SIZE - 100);
 }
 
-function getStartPositionLui() {
-    return new Vec2((200 - LUIDZHI_SIZE) / 2 - 300, 500 * EARTH_LINE - LUIDZHI_SIZE - 100);
-}
-
-export {showGame, getStartPosition, getStartPositionLui};
+export {createGame, getStartPosition};

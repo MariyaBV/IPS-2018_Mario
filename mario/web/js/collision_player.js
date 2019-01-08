@@ -1,5 +1,6 @@
 import {getStartPosition} from './game.js';
 import {MARIO_SIZE} from './const_mario.js';
+import {PLAYER_SIZE} from './const_player.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY} from './objects.js';
 import {isFloatEqual} from './compare.js';
 import {Vec2} from './vector.js';

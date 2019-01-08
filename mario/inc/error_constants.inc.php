@@ -6,6 +6,7 @@ const ERR_INCORRECT_NUMBER_OF_PARAM = 3;
 const ERR_USER_EXISTS = 4;
 const ERR_USER_NOT_EXISTS = 5;
 const ERR_WRONG_PASS = 6;
+const ERR_DATA_TRANSFERRED = 7;
 
 function getErrorMessage($errorCode)
 {
@@ -17,6 +18,7 @@ function getErrorMessage($errorCode)
         4 => "Пользователь с таким email уже существует.",
         5 => "Пользователя с таким email еще нет.",
         6 => "Не верный пароль.",
+        7 => "Данные переданы.",
     ];
 
     return $errArr[$errorCode];

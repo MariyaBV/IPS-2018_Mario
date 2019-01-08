@@ -1,19 +1,13 @@
-import {getStartPositionLui} from './game.js';
+import {getStartPosition} from './game.js';
 import {LUIDZHI_SIZE} from './const_luidzhi.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, COIN, ENEMY} from './objects.js';
 import {isFloatEqual} from './compare.js';
 import {Vec2} from './vector.js';
+import {OBJECT_HEIGHT, OBJECT_WIDTH, objectType} from './collision_player.js';
 
-const OBJECT_HEIGHT = 50;
-const OBJECT_WIDTH = 50;
 let AMOUNT_OF_COINS_LUIDZHI = 0;
 let AMOUNT_OF_ENEMIES_LUIDZHI = 0;
 let NUMBER_OF_LIVES_LUIDZHI = 3;
-const objectType = {
-    barrier: 1,
-    coin: 2,
-    enemy: 3,
-};
 
 function bottomScreenCollisionLui(game) {
     if (game.luidzhiInfo.luidzhi.position.y > 500 - 2 * LUIDZHI_SIZE) {
@@ -48,7 +42,7 @@ function collisionWithCoin(object, game) {
         if ((COIN[i][0] == object[0]) && (COIN[i][1] == object[1])) {
             COIN.splice(i, 1);
             AMOUNT_OF_COINS_LUIDZHI ++;
-            game.luidzhiInfo.point.pointOfCoin(AMOUNT_OF_COINS_LUIDZHI);
+            game.luidzhiInfo.count.countOfCoin(AMOUNT_OF_COINS_LUIDZHI);
             console.log('Количество монет Lui = ', AMOUNT_OF_COINS_LUIDZHI);
         }
     }
@@ -56,9 +50,9 @@ function collisionWithCoin(object, game) {
 
 function collisionWithEnemyWithLosingLife(game) {
     NUMBER_OF_LIVES_LUIDZHI --;
-    game.luidzhiInfo.point.pointOfLive(NUMBER_OF_LIVES_LUIDZHI);
+    game.luidzhiInfo.count.countOfLive(NUMBER_OF_LIVES_LUIDZHI);
     console.log('Количество ЖИЗНЕЙ Lui = ', NUMBER_OF_LIVES_LUIDZHI);
-    game.luidzhiInfo.luidzhi.position = getStartPositionLui();
+    game.luidzhiInfo.luidzhi.position = getStartPosition();
     if (NUMBER_OF_LIVES_LUIDZHI == 0) {
         alert('GAME OVER!');
         game.finished = true;
@@ -78,7 +72,7 @@ function killEnemy(object, game) {
         if ((ENEMY[j][0] == object[0]) && (ENEMY[j][1] == object[1])) {
             ENEMY.splice(j, 1);
             AMOUNT_OF_ENEMIES_LUIDZHI ++;
-            game.luidzhiInfo.point.pointOfGoomba(AMOUNT_OF_ENEMIES_LUIDZHI);
+            game.luidzhiInfo.count.countOfGoomba(AMOUNT_OF_ENEMIES_LUIDZHI);
             console.log('Количество убитых ENEMIES Lui = ', AMOUNT_OF_ENEMIES_LUIDZHI);
         }
     }
