@@ -11,7 +11,7 @@ if (isPost()) {
     $password = $_POST["password"] ?? "";
     $registredUsers = dbQueryGetResult(getUserInfoByEmail($email));
     
-    authorizationWithCheck($email, $password, $registredUsers, $errorCode, $vars);
+    authorizationWithCheck($email, $password, $registredUsers, $errorCode);
 }
 
 echo getView('authorization/authorization.html.twig', $vars);

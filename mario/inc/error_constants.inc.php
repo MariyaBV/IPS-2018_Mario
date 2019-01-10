@@ -7,6 +7,8 @@ const ERR_USER_EXISTS = 4;
 const ERR_USER_NOT_EXISTS = 5;
 const ERR_WRONG_PASS = 6;
 const ERR_DATA_TRANSFERRED = 7;
+const ERR_SHORT_PASSWORD = 8;
+const ERR_WRONG_OLD_PASSWORD = 9;
 
 function getErrorMessage($errorCode)
 {
@@ -19,6 +21,8 @@ function getErrorMessage($errorCode)
         5 => "Пользователя с таким email еще нет.",
         6 => "Не верный пароль.",
         7 => "Данные переданы.",
+        8 => "Слишком короткий пароль. Пожалуйста, введите пароль более 6 символов.",
+        9 => "Введен неверно текущий пароль.",
     ];
 
     return $errArr[$errorCode];

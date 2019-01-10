@@ -1,7 +1,11 @@
 <?php
 require_once("inc/common.inc.php");
-$vars = [];
 
+$userId = getFromSession("user_id");
+$id = dbQueryGetResult(getUserById($userId));
+$vars = [
+    'user_id' => $id,
+];
 $mario = $_POST["mario1"] ?? "";
 $luidzhi = $_POST["luidzhi"] ?? "";
 

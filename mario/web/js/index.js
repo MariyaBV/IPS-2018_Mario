@@ -4,7 +4,7 @@ import {KeyMap, processKeyMapForMario, processKeyMapForLuidzhi} from './key_map.
 import {countToScreen} from './counts.js';
 import {createGame, getStartPosition} from './game.js';
 import {ctx1, ctx2, getCanvasSize} from './canvas.js';
-import {countsToSession, getAnAnswer} from './session.js';
+import {countsToSession} from './session.js';
 const UPDATES_PER_FRAME = 5;
 
 function main() {
@@ -78,7 +78,6 @@ function main() {
 
         if (game.finished) {
             countsToSession(game);
-            // getAnAnswer();
         } else {
             requestAnimationFrame(animateFn);
         }

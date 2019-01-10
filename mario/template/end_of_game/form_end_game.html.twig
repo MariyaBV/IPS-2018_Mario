@@ -26,7 +26,20 @@
                         {{gamer2}}<span class="b-end-of-game__count" id="countPlayer2"></span>
                     </div>
                 </div>
-                    <a href="/registration.php"><button type="button" class="btn btn-success b-authorization__button">Играть заново</button></a>
+                {% if user_id is empty %}
+                    <a href="/registration.php">
+                        <button type="button" class="btn btn-success b-authorization__button">
+                            Регистрация
+                        </button>
+                    </a>
+                {% endif %}
+                {% if user_id is not empty %}
+                    <a href="/action_choice.php">
+                        <button type="button" class="btn btn-success b-authorization__button">
+                            Далее
+                        </button>
+                    </a>
+                {% endif %}
             </form>
         </div>
     </div>

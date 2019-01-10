@@ -15,3 +15,8 @@ function getFromSession($key)
 {
     return $_SESSION[$key] ?? '';
 }
+
+function endOfSession()
+{
+    session_destroy();
+}

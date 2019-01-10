@@ -1,36 +1,41 @@
 <div class="container b-registration__form">
     <div class="row align-middle">
         <div class="col-md-6 col-xs-12 offset-md-3">
-            <form>
+            <form method="post">
                 <div class="form-group b-authorization__form-group b-account__form-group row">
                     <label for="Email" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control b-authorization__input" readonly id="loginAuthorization" placeholder="">
+                        <input type="email" name="email" class="form-control b-authorization__input" readonly id="loginAuthorization" value="{{email}}">
                     </div>
                 </div>
                 <div class="form-group b-authorization__form-group b-account__form-group row">
                     <label for="Name" class="col-sm-2 col-form-label">Имя</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control b-authorization__input" id="nameAuthorization" placeholder="">
+                        <input type="text" name="user_name" class="form-control b-authorization__input" id="nameAuthorization" value="{{user_name}}">
                     </div>
                 </div>
                 <div class="form-group b-authorization__form-group b-account__form-group row">
                     <label for="Password" class="col-sm-2 col-form-label">Пароль</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control b-authorization__input b-account__input" id="inputPasswordAuthorization" placeholder="">
+                        <input type="password" name="old_password" class="form-control b-authorization__input b-account__input" id="oldasswordAuthorization" placeholder="Введите текущий пароль">
+                    </div>
+                </div>
+                <div class="form-group b-authorization__form-group b-account__form-group row">
+                    <label for="Password" class="col-sm-2 col-form-label">Пароль</label>
+                    <div class="col-sm-10">
+                        <input type="password" name="new_password" class="form-control b-authorization__input b-account__input" id="inputPasswordAuthorization" placeholder="Введите новый пароль">
                     </div>
                 </div>
                 <div class="form-group b-authorization__form-group b-account__form-group row">
                     <label for="Password2" class="col-sm-2 col-form-label">Повтор пароля</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control b-authorization__input b-account__input" id="repeatPasswordAuthorization" placeholder="">
+                        <input type="password" name="reapeat_password" class="form-control b-authorization__input b-account__input" id="repeatPasswordAuthorization" placeholder="Повторите новый пароль">
+                        <p class="error-text">{{error}}</p>
                     </div>
                 </div>
                 <div class="row justify-content-sm-end justify-content-between b-account__buttons-block">
                     <div class="col-sm-5 col-6">
-                        <a href="/action_choice.php">
-                            <button type="button" class="btn btn-primary b-account__button">Сохранить</button>
-                        </a>
+                        <button type="submit" class="btn btn-primary b-account__button">Сохранить</button>
                     </div>
                     <div class="col-sm-5 col-6">
                         <a href="/action_choice.php">

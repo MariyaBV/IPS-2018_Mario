@@ -43,7 +43,9 @@ function countsToSession(game) {
         playersCounts,
     };
 
-    $.post('mario.php', counts, function(data) {onComplete(data)});
+    $.post('mario.php', counts, function(data) {
+        onComplete(data);
+    });
     console.log('countsToSession', counts);
 };
 
@@ -55,13 +57,4 @@ function onComplete(response) {
     }
 }
 
-function getAnAnswer() {
-    $.ajax({
-        url: 'mario.php',
-        type: 'POST',
-        dataType: 'json',
-        complete: onComplete,
-    });
-}
-
-export {countsToSession, getAnAnswer};
+export {countsToSession};

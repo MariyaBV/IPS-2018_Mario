@@ -14,12 +14,19 @@
                 <a href="/player_names.php">
                     <button type="button" class="btn btn-success b-main-page__play">Играть</button>
                 </a>
-                <a href="/authorization.php">
-                    <button type="button" class="btn btn-primary">Войти</button>
-                </a>
-                <a href="/registration.php">
-                    <button type="button" class="btn btn-primary">Регистрация</button>
-                </a>
+                {% if user_id is empty %}
+                    <a href="/authorization.php">
+                        <button type="button" class="btn btn-primary">Войти</button>
+                    </a>
+                    <a href="/registration.php">
+                        <button type="button" class="btn btn-primary">Регистрация</button>
+                    </a>
+                {% endif %}
+                {% if user_id is not empty %}
+                    <a href="/log_out.php">
+                        <button type="button" class="btn btn-danger">Выйти</button>
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

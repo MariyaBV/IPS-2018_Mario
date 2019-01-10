@@ -14,7 +14,6 @@ const DOCUMENT_ROOT_LW5 = 'C:/dev-project/php7';
 
 require_once(DOCUMENT_ROOT_LW5 . '/vendor/autoload.php');
 require_once("inc/session.inc.php");
-//require_once("info_to_session.php");
 
 dbInitialConnect();
 startSession();

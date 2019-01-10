@@ -7,4 +7,4 @@ $vars = [
     'user_id' => $id,
 ];
 
-echo getView('index/index.html.twig', $vars);
+echo getView('score_table/score_table.html.twig', $vars);

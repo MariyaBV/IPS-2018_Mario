@@ -3,9 +3,12 @@ require_once("inc/common.inc.php");
 $error = ERR_NONE;
 $gamer1 = getFromSession("mario1");
 $gamer2 = getFromSession("luidzhi");
+$userId = getFromSession("user_id");
+$id = dbQueryGetResult(getUserById($userId));
 $vars = [
     'gamer1' => $gamer1,
     'gamer2' => $gamer2,
+    'user_id' => $id,
 ];
 
 if (isPost()) {

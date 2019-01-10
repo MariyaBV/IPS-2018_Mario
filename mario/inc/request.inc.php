@@ -31,7 +31,19 @@ function pageRegistrationWithError($errorCode)
     exit;
 }
 
-function authorizationWithCheck($email, $password, $registredUsers, $errorCode, $vars)
+function pageChangeInfoWithError($errorCode, $email, $userName)
+{
+    $vars = [
+        'error' => getErrorMessage($errorCode),
+        'user_name' => $userName,
+        'email' => $email,
+    ];
+
+    echo getView('account/personal_account.html.twig', $vars);
+    exit;
+}
+
+function authorizationWithCheck($email, $password, $registredUsers, $errorCode)
 {
     if (empty($email) || empty($password)) {
         $errorCode = ERR_EMPTY_PARAM;
@@ -43,21 +55,22 @@ function authorizationWithCheck($email, $password, $registredUsers, $errorCode, 
         pageAuthorizationWithError($errorCode);
     };
 
-    $userPassword = compareWithСorrectPassword($email);
-    $getUserPassword = $userPassword[0]['pass_hash'];
+    $getUserPassword = $registredUsers[0]['pass_hash'];
 
-    if ($password != $getUserPassword) {
+    if (!password_verify($password, $getUserPassword)) {
         $errorCode = ERR_WRONG_PASS;
         pageAuthorizationWithError($errorCode);
     };
 
-    if ($password == $getUserPassword) {
+    if (password_verify($password, $getUserPassword)) {
+        $userId = $registredUsers[0]['user_id'];
+        saveToSession("user_id", $userId);
         header ('Location: /action_choice.php');
         exit;
     }
 }
 
-function registrationWithCheck($email, $password, $registredUsers, $repeatPassword, $errorCode, $vars)
+function registrationWithCheck($email, $password, $registredUsers, $repeatPassword, $errorCode)
 {
     $name = $_POST["username"] ?? "";
 
@@ -71,14 +84,45 @@ function registrationWithCheck($email, $password, $registredUsers, $repeatPasswo
         pageRegistrationWithError($errorCode);
     };
     
+    if (strlen($password) < 6) {
+        $errorCode = ERR_SHORT_PASSWORD;
+        pageRegistrationWithError($errorCode);
+    };
+
     if ($password != $repeatPassword) {
         $errorCode = ERR_DIFFERENT_PASSWORDS;
         pageRegistrationWithError($errorCode);
     };
     
-    if ($errorCode == ERR_NONE) {    
-        registerUser($name, $password, $email);
+    if ($errorCode == ERR_NONE) {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);  
+        registerUser($name, $passwordHash, $email);
         header ('Location: /authorization.php');
         exit;
     }
 }
+
+function dataChange($email, $userName, $userPassword, $oldPassword, $newPassword, $reapeatPassword, $errorCode) 
+{
+    if (!password_verify($oldPassword, $userPassword)) {
+        $errorCode = ERR_WRONG_OLD_PASSWORD;
+        pageChangeInfoWithError($errorCode, $email, $userName);
+    };
+
+    if ($newPassword != $reapeatPassword) {
+        $errorCode = ERR_DIFFERENT_PASSWORDS;
+        pageChangeInfoWithError($errorCode, $email, $userName);
+    };
+
+    if (strlen($newPassword) < 6) {
+        $errorCode = ERR_SHORT_PASSWORD;
+        pageRegistrationWithError($errorCode);
+    };
+
+    if ($errorCode == ERR_NONE) {
+        $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);  
+        changeUserInfo($userName, $passwordHash, $email);
+        header ('Location: /action_choice.php');
+        exit;
+    }
+};

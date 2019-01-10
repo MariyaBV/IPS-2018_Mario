@@ -11,7 +11,7 @@ if (isPost()) {
     $repeatPassword = $_POST["repeat_password"] ?? "";
     $registredUsers = dbQueryGetResult(getUserInfoByEmail($email));
 
-    registrationWithCheck($email, $password, $registredUsers, $repeatPassword, $errorCode, $vars);
+    registrationWithCheck($email, $password, $registredUsers, $repeatPassword, $errorCode);
 }
 
 echo getView('registration/registration.html.twig', $vars);
