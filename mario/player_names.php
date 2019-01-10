@@ -9,6 +9,13 @@ $vars = [
 $mario = $_POST["mario1"] ?? "";
 $luidzhi = $_POST["luidzhi"] ?? "";
 
+if (empty($luidzhi)) {
+    $mario = "игрок 1";
+};
+if (empty($mario)) {
+    $mario = "игрок 2";
+};
+
 saveToSession("mario1", $mario);  
 saveToSession("luidzhi", $luidzhi);
 

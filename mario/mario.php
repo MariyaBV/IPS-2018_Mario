@@ -19,6 +19,8 @@ if (isPost()) {
         $luidzhiScore = $playerScore['luidzhiScore'];
         $marioScore = $playerScore['marioScore'];
     }
+    saveToSession("marioScore", $marioScore);
+    saveToSession("luidzhiScore", $luidzhiScore);
     $winningPlayer = compareScore($marioScore, $luidzhiScore, $gamer1, $gamer2);
 
     saveToSession("winningPlayer", $winningPlayer);
@@ -27,7 +29,6 @@ if (isPost()) {
 
     $error = ERR_DATA_TRANSFERRED;
     echo (json_encode($error));
-    // header('Location: /end_of_game.php', true, 302);
     exit;
 }
 

@@ -41,7 +41,37 @@ function changeUserInfo($userName, $passwordHash, $email)
     return $changeInfo;
 };
 
-function fromSessionToBD($userId, $marioScore, $luidzhiScore, $gamer1, $gamer2, $endTime)
+function saveGameId($endTime)
 {
+    $createGame = 'INSERT INTO  `game` (created_at) VALUES (\'' . dbQuote($endTime) . '\')';
+    dbQuery($createGame);
 
+    return $createGame;
+}
+
+function getPlayerId($id)
+{
+    $playerId = 'SELECT player_id FROM  player  WHERE user_id = \'' . dbQuote($id) . '\'';
+    dbQuery($playerId);
+
+    return $playerId;
+}
+
+function insertPlayerInfo($gamer, $userId)
+{
+    $insertPlayer = 'INSERT INTO  `player` (player_name, user_id) VALUES (\'' . dbQuote($gamer) . '\', \'' . dbQuote($userId) . '\')';
+    dbQuery($insertPlayer);
+
+    return $insertPlayer;
+}
+
+function fromSessionToBD($userId, $playerScore, $gamer, $gameId, $playerSumScore)
+{
+    insertPlayerInfo($gamer, $userId);
+    $playerId = dbGetLastInsertId();
+    $insertScore = 'INSERT INTO  `score` (player_id, lifes, goomba, coins, points, game_id) 
+    VALUES (\'' . dbQuote($playerId) . '\', \'' . dbQuote($playerScore['live']) . '\', \'' . dbQuote($playerScore['goomba']) . '\', \'' . dbQuote($playerScore['coin']) . '\', \'' . dbQuote($playerSumScore) . '\', \'' . dbQuote($gameId) . '\')';
+    dbQuery($insertScore);
+    
+    return $insertScore;
 }
