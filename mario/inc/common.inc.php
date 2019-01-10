@@ -17,3 +17,4 @@ require_once("inc/session.inc.php");
 
 dbInitialConnect();
 startSession();
+date_default_timezone_set('Europe/Moscow');

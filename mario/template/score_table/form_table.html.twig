@@ -3,38 +3,30 @@
         <table class="table table-bordered b-counts-table__table">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>Дата</th>
                     <th>Имя игрока</th>
                     <th>Монеты</th>
                     <th>Жизни</th>
                     <th>Goomba</th>
-                    <th>Время прохождения игры / сек</th>
                     <th>ИТОГО</th>
                 </tr>
             </thead>
-            <tbody class="b-counts-table__one-game">
+            {% for data in datas %}
+                {% if loop.index0 % 2 == 0 %}
+                    <tbody class="b-counts-table__one-game">
+                {% endif %}
                 <tr>
-                    <th scope="row">Игрок 1</th>
-                    <td>10.10.18</td>
-                    <td>Petya</td>
-                    <td>5</td>
-                    <td>3</td>
-                    <td>2</td>
-                    <td>300</td>
-                    <td>373</td>
+                    <td>{{ data.game_date }}</td>
+                    <td>{{ data.player_name }}</td>
+                    <td>{{ data.coins }}</td>
+                    <td>{{ data.lifes }}</td>
+                    <td>{{ data.goomba }}</td>
+                    <td>{{ data.points }}</td>
                 </tr>
-                <tr>
-                    <th scope="row">Игрок 2</th>
-                    <td>10.10.18</td>
-                    <td>Thornton</td>
-                    <td>5</td>
-                    <td>3</td>
-                    <td>5</td>
-                    <td>300</td>
-                    <td>531</td>
-                </tr>
-            </tbody>
+                {% if loop.index0 % 2 == 1 or loop.last %}
+                    </tbody>
+                {% endif %}
+            {% endfor %}
         </table>
     </div>
 </div>

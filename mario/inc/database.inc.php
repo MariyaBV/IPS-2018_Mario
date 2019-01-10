@@ -6,8 +6,8 @@ function dbInitialConnect()
 {
     global $g_dbLink;
     $g_dbLink = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-    mysqli_set_charset($g_dbLink, "utf8");
-    //mysqli_character_set_name($g_dbLink);
+    //mysqli_set_charset($g_dbLink, "utf8");
+    mysqli_character_set_name($g_dbLink);
     $error = mysqli_connect_error();
     if ($error)
         die('Unable to connect to DB');

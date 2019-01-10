@@ -75,3 +75,17 @@ function fromSessionToBD($userId, $playerScore, $gamer, $gameId, $playerSumScore
     
     return $insertScore;
 }
+
+
+function getDataOfScoreByBD($userId)
+{
+    $data = 'SELECT player.player_name, score.coins, score.lifes, score.goomba, score.points, DATE_FORMAT(game.created_at, "%Y-%m-%d %H:%i") as game_date
+    FROM user_table, score, player, game
+    WHERE game.game_id = score.game_id AND
+    player.user_id = user_table.user_id AND
+    player.player_id = score.player_id AND
+    user_table.user_id = \'' . dbQuote($userId) . '\';';
+    dbQuery($data);
+        
+    return $data;
+}

@@ -20,7 +20,7 @@ $luidzhiScore = getFromSession("luidzhiCounts");
 $marioSumScore = getFromSession("marioScore");
 $luidzhiSumScore = getFromSession("luidzhiScore");
 
-if (!empty($userId)) {
+if (!empty($userId) && (!empty($marioScore) || !empty($luidzhiScore)) && (!empty($marioSumScore) || !empty($luidzhiSumScore))) {
     saveGameId($endTime);
     $gameId = dbGetLastInsertId();
     fromSessionToBD($userId, $marioScore, $gamer1, $gameId, $marioSumScore);
