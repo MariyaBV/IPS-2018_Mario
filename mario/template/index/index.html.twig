@@ -3,34 +3,32 @@
 {% block title %}Mario main page{% endblock %}
 
 {% block menu %}
-    <div class="container mt-md-4 mb-md-5 my-3">
-        <div class="row justify-content-md-end">
+    <div class="container mt-md-4 mb-5 mb-sm-3 mt-3 b-main-page">
+        <div class="row justify-content-end">
             <div class="col-lg-7 col-md-5">
-                <h1 class="b-main-page__title">
-                    MARIO<span class="b-main-page__title b-main-page__title_small text-nowrap"> игра на двоих</span>
-                </h1>
+                <img class="b-main-page__logo" src="web/img/mario_lui.png"/>
             </div>
-            <div class="col-lg-5 col-md-7 my-3 b-main-page__buttons-block">
+            <div class="col-lg-5 col-md-7 col-3 my-3 b-main-page__buttons-block">
                 <a href="/player_names.php">
-                    <button type="button" class="btn btn-success b-main-page__play">Играть</button>
+                    <button type="button" class="btn mb-3 btn-success b-main-page__play">Играть</button>
                 </a>
                 {% if user_id is empty %}
                     <a href="/authorization.php">
-                        <button type="button" class="btn btn-primary">Войти</button>
+                        <button type="button" class="btn mb-3 btn-primary">Войти</button>
                     </a>
                     <a href="/registration.php">
-                        <button type="button" class="btn btn-primary">Регистрация</button>
+                        <button type="button" class="btn mb-3 btn-primary">Регистрация</button>
                     </a>
                 {% endif %}
                 {% if user_id is not empty %}
                     <a href="/score_table.php">
-                        <button type="button" class="btn btn-primary">Рейтинг</button>
+                        <button type="button" class="btn mb-3 btn-primary">Рейтинг</button>
                     </a>
                     <a href="/personal_account.php">
-                        <button type="button" class="btn btn-primary">Аккаунт</button>
+                        <button type="button" class="btn mb-3 btn-primary">Аккаунт</button>
                     </a>
                     <a href="/log_out.php">
-                        <button type="button" class="btn btn-danger">Выйти</button>
+                        <button type="button" class="btn mb-3 btn-danger">Выйти</button>
                     </a>
                 {% endif %}
             </div>

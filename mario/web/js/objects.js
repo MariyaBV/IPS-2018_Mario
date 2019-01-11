@@ -70,4 +70,29 @@ const CASTLE = [
     [109, 5, 4],
 ];
 
-export {CASTLE, EARTH, STAFF, BALL, ENEMY, COIN, BRICK_LEDGE_ONES, BRICK_LEDGE};
+const CLOUD = [
+    [4, 3, 2, 2],
+    [11, 1, 2, 2],
+    [16, 3, 2, 2],
+    [22, 2, 2, 2],
+    [30, 4, 2, 2],
+    [36, 6, 2, 2],
+    [43, 3, 2, 2],
+    [58, 4, 2, 2],
+    [66, 1, 2, 2],
+    [78, 3, 2, 2],
+    [89, 2, 2, 2],
+    [96, 4, 2, 2],
+];
+
+const BUSH = [
+    [2, 8, 3, 1],
+    [11, 8, 3, 1],
+    [22, 8, 3, 1],
+    [33, 8, 3, 1],
+    [56, 8, 3, 1],
+    [80, 8, 3, 1],
+    [99, 8, 3, 1],
+];
+
+export {CASTLE, EARTH, STAFF, BALL, ENEMY, COIN, BRICK_LEDGE_ONES, BRICK_LEDGE, CLOUD, BUSH};

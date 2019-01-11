@@ -41,6 +41,14 @@ function changeUserInfo($userName, $passwordHash, $email)
     return $changeInfo;
 };
 
+function changeUserName($userName, $email)
+{
+    $changeName = 'UPDATE user_table SET user_name = \'' . dbQuote($userName) . '\' WHERE email = \'' . dbQuote($email) . '\'';
+    dbQuery($changeName);
+
+    return $changeName;
+}
+
 function saveGameId($endTime)
 {
     $createGame = 'INSERT INTO  `game` (created_at) VALUES (\'' . dbQuote($endTime) . '\')';

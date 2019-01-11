@@ -17,16 +17,19 @@ const path = {
         js: 'web/js/',
         css: 'web/css/',
         img: 'web/img/',
+        audio: 'web/audio/',
     },
     src: {
         js: 'src/js/**/*.js',
         style: 'src/style/main.scss',
         img: 'src/img/**/*.*',
+        audio: 'src/audio/**/*.*',
     },
     watch: {
         js: 'src/js/**/*.js',
         css: 'src/style/**/*.scss',
         img: 'src/img/**/*.*',
+        audio: 'web/audio/*.*',
     },
     clean: './web',
 };
@@ -67,6 +70,12 @@ gulp.task('image:web', function() {
         .pipe(gulp.dest(path.web.img)); // выгрузка готовых файлов
 });
 
+//перенос audio
+gulp.task('audio:web', function() {
+    gulp.src(path.src.audio) // путь с исходниками картинок
+        .pipe(gulp.dest(path.web.audio)); // выгрузка готовых файлов
+});
+
 // удаление каталога web
 gulp.task('clean:web', function() {
     del.sync(path.clean);
@@ -83,6 +92,7 @@ gulp.task('web', [
     'css:web',
     'js:web',
     'image:web',
+    'audio:web',
 ]);
 
 // запуск задач при изменении файлов
@@ -90,6 +100,7 @@ gulp.task('watch', function() {
     gulp.watch(path.watch.css, ['css:web']);
     gulp.watch(path.watch.js, ['js:web']);
     gulp.watch(path.watch.img, ['image:web']);
+    gulp.watch(path.watch.img, ['audio:web']);
 });
 
 // задача по умолчанию

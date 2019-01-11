@@ -109,14 +109,20 @@ function dataChange($email, $userName, $userPassword, $oldPassword, $newPassword
         pageChangeInfoWithError($errorCode, $email, $userName);
     };
 
-    if ($newPassword != $reapeatPassword) {
+    if (empty($newPassword) && empty($reapeatPassword) && !empty($userName) && ($errorCode == ERR_NONE)) {
+        changeUserName($userName, $email);
+        header ('Location: /action_choice.php');
+        exit;
+    }
+
+    if ($newPassword != $reapeatPassword && !empty($newPassword)) {
         $errorCode = ERR_DIFFERENT_PASSWORDS;
         pageChangeInfoWithError($errorCode, $email, $userName);
     };
 
-    if (strlen($newPassword) < 6) {
+    if (strlen($newPassword) < 6 && !empty($newPassword)) {
         $errorCode = ERR_SHORT_PASSWORD;
-        pageRegistrationWithError($errorCode);
+        pageChangeInfoWithError($errorCode, $email, $userName);
     };
 
     if ($errorCode == ERR_NONE) {

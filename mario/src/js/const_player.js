@@ -5,14 +5,16 @@ Player.MAX_SPEED = 200; // для максимальной скорости
 
 function PlayerInfo({
     firstFinish,
-    keyMap,
     player,
+    manageKeys,
     count,
+    score,
 }) {
     this.firstFinish = firstFinish;
-    this.keyMap = keyMap;
     this.player = player;
+    this.manageKeys = manageKeys;
     this.count = count;
+    this.score = score;
 }
 
 function Player({
@@ -27,11 +29,30 @@ function Player({
 
     this.applyForce = function(force, dt) {
         this.speed = this.speed.add(force.multiplyScalar(dt));
-        //const speedVecLength = this.speed.length();
         if (this.speed.x > Player.MAX_SPEED) {
             this.speed = new Vec2(Player.MAX_SPEED, this.speed.y);
         }
     };
 }
 
-export {PLAYER_SIZE, Player, PlayerInfo};
+function ManageKeys({
+    LEFT,
+    RIGHT,
+    UP,
+}) {
+    this.LEFT = LEFT;
+    this.RIGHT = RIGHT;
+    this.UP = UP;
+}
+
+function Score({
+    numberOfLives,
+    amountOfCoins,
+    amountOfEnemies,
+}) {
+    this.numberOfLives = numberOfLives;
+    this.amountOfCoins = amountOfCoins;
+    this.amountOfEnemies = amountOfEnemies;
+}
+
+export {PLAYER_SIZE, Player, PlayerInfo, ManageKeys, Score};

@@ -6,7 +6,7 @@
     <div class="header container-fluid b-container my-lg-4 my-sm-2" id="header">
         <div class="row">
             <div class="col-lg-4">
-                <h1 class="b-canvas-wrapper__title">MARIO<span class="b-main-page__title b-main-page__title_small">x2</span></h1>
+                <img class="b-mario__logo" src="web/img/mario_lui.png"/>
             </div>
             <div class=" col-lg-8">
                 <div class="row justify-content-lg-end">
@@ -66,6 +66,7 @@
 
 {% block content %}
     {% include ("mario/content_mario.html.twig") %}
+    {% include ("modal/modal_pause.html.twig") %}
 {% endblock %}
 
 {% block js %}

@@ -1,23 +1,23 @@
-import {AMOUNT_OF_ENEMIES, AMOUNT_OF_COINS, NUMBER_OF_LIVES} from './collision_player.js';
-import {AMOUNT_OF_ENEMIES_LUIDZHI, AMOUNT_OF_COINS_LUIDZHI, NUMBER_OF_LIVES_LUIDZHI} from './collision_luidzhi.js';
 import {score} from './counts.js';
 
 function scoreOfPlayers(game) {
     let marioScore;
     let luidzhiScore;
-    if (NUMBER_OF_LIVES == 0) {
+    const mario = game.marioInfo.score;
+    const luidzhi = game.luidzhiInfo.score;
+    if (mario.numberOfLives == 0) {
         marioScore = 0;
     } else if (game.marioInfo.firstFinish == true) {
-        marioScore = score(AMOUNT_OF_ENEMIES, AMOUNT_OF_COINS, NUMBER_OF_LIVES) * 1.5;
+        marioScore = score(mario.amountOfEnemies, mario.amountOfCoins, mario.numberOfLives) * 1.5;
     } else {
-        marioScore = score(AMOUNT_OF_ENEMIES, AMOUNT_OF_COINS, NUMBER_OF_LIVES);
+        marioScore = score(mario.amountOfEnemies, mario.amountOfCoins, mario.numberOfLives);
     }
-    if (NUMBER_OF_LIVES_LUIDZHI == 0) {
+    if (luidzhi.numberOfLives == 0) {
         luidzhiScore = 0;
     } else if (game.luidzhiInfo.firstFinish == true) {
-        luidzhiScore = score(AMOUNT_OF_ENEMIES_LUIDZHI, AMOUNT_OF_COINS_LUIDZHI, NUMBER_OF_LIVES_LUIDZHI) * 1.5;
+        luidzhiScore = score(luidzhi.amountOfEnemies, luidzhi.amountOfCoins, luidzhi.numberOfLives) * 1.5;
     } else {
-        luidzhiScore = score(AMOUNT_OF_ENEMIES_LUIDZHI, AMOUNT_OF_COINS_LUIDZHI, NUMBER_OF_LIVES_LUIDZHI);
+        luidzhiScore = score(luidzhi.amountOfEnemies, luidzhi.amountOfCoins, luidzhi.numberOfLives);
     }
 
     const playersCounts = {
@@ -31,14 +31,14 @@ function countsToSession(game) {
     const playersCounts = scoreOfPlayers(game);
     const counts = {
         mario: {
-            'coin': AMOUNT_OF_COINS,
-            'live': NUMBER_OF_LIVES,
-            'goomba': AMOUNT_OF_ENEMIES,
+            'coin': game.marioInfo.score.amountOfCoins,
+            'live': game.marioInfo.score.numberOfLives,
+            'goomba': game.marioInfo.score.amountOfEnemies,
         },
         luidzhi: {
-            'coin': AMOUNT_OF_COINS_LUIDZHI,
-            'live': NUMBER_OF_LIVES_LUIDZHI,
-            'goomba': AMOUNT_OF_ENEMIES_LUIDZHI,
+            'coin': game.luidzhiInfo.score.amountOfCoins,
+            'live': game.luidzhiInfo.score.numberOfLives,
+            'goomba': game.luidzhiInfo.score.amountOfEnemies,
         },
         playersCounts,
     };
@@ -46,7 +46,6 @@ function countsToSession(game) {
     $.post('mario.php', counts, function(data) {
         onComplete(data);
     });
-    console.log('countsToSession', counts);
 };
 
 function onComplete(response) {
