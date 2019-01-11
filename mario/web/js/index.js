@@ -1,6 +1,6 @@
 import {redraw} from './draw.js';
 import {update} from './update.js';
-import {KeyMap, processKeyMapForMario, processKeyMapForLuidzhi} from './key_map.js';
+import {KeyMap, processKeyMapForPlayer} from './key_map.js';
 import {countToScreen} from './counts.js';
 import {createGame, getStartPosition} from './game.js';
 import {ctx1, ctx2, getCanvasSize} from './canvas.js';
@@ -20,7 +20,7 @@ function main() {
     document.addEventListener('keyup', (event) => {
         keyMap.onKeyUp(event.keyCode);
     });
-
+    const pause = document.getElementById('windowPause');
     const {width, height} = getCanvasSize();
 
     redraw({
@@ -38,32 +38,34 @@ function main() {
         lastTimestamp = currentTimeStamp;
 
         // объединить функции
-        game.marioInfo.keyMap = processKeyMapForMario({
-            keyMap,
+        processKeyMapForPlayer({
             dt: deltaTime,
+            keyMap,
             game,
+            playerInfo: game.marioInfo,
         });
-
-        game.luidzhiInfo.keyMap = processKeyMapForLuidzhi({
-            keyMap,
+        processKeyMapForPlayer({
             dt: deltaTime,
+            keyMap,
             game,
+            playerInfo: game.luidzhiInfo,
         });
 
         const {width, height} = getCanvasSize();
 
         if (!game.stop) {
+            pause.style.display = 'none';
             for (let i = 0; i < UPDATES_PER_FRAME; ++i) {
                 update({
                     boxHeight: 500,
                     dt: deltaTime / UPDATES_PER_FRAME,
                     game,
                 });
-                if (!game.marioInfo.mario.position) {
-                    game.marioInfo.mario.position = getStartPosition();
+                if (!game.marioInfo.player.position) {
+                    game.marioInfo.player.position = getStartPosition();
                 }
-                if (!game.luidzhiInfo.luidzhi.position) {
-                    game.luidzhiInfo.luidzhi.position = getStartPosition();
+                if (!game.luidzhiInfo.player.position) {
+                    game.luidzhiInfo.player.position = getStartPosition();
                 }
             }
 
@@ -74,6 +76,8 @@ function main() {
                 ctx2,
                 game,
             });
+        } else {
+            pause.style.display = 'block';
         }
 
         if (game.finished) {
@@ -83,6 +87,12 @@ function main() {
         }
     };
     animateFn();
+};
+
+window.onload = () => {
+    document.body.addEventListener('click', () => {
+        document.getElementById('audio').play();
+    }, false);
 };
 
 main();

@@ -1,14 +1,14 @@
 import {isFloatEqual} from './compare.js';
-import {OBJECT_WIDTH, marioPositionYRelativeToObject, objectType} from './collision_player.js';
+import {OBJECT_WIDTH, playerPositionYRelativeToObject, OBJECT_TYPE} from './collision_player.js';
 import {ENEMY_STEP, ENEMY_SIZE} from './move_enemy.js';
 import {BRICK_LEDGE_ONES, BRICK_LEDGE, ENEMY} from './objects.js';
 
 const objType = 1;
 
-function objectOnRightFromEnemy(ENEMY, object, objType, objectType) {
+function objectOnRightFromEnemy(ENEMY, object, objType, OBJECT_TYPE) {
     if (isFloatEqual(ENEMY[0] * ENEMY_SIZE + ENEMY_SIZE, object[0] * OBJECT_WIDTH, 1)) {
-        if (marioPositionYRelativeToObject(ENEMY[1] * ENEMY_SIZE, object)) {
-            if (objType == objectType.barrier) {
+        if (playerPositionYRelativeToObject(ENEMY[1] * ENEMY_SIZE, object)) {
+            if (objType == OBJECT_TYPE.BARRIER) {
                 ENEMY[4] = 1;
                 ENEMY[0] -= ENEMY_STEP;
             }
@@ -16,10 +16,10 @@ function objectOnRightFromEnemy(ENEMY, object, objType, objectType) {
     }
 }
 
-function objectOnLeftFromEnemy(ENEMY, object, objType, objectType) {
+function objectOnLeftFromEnemy(ENEMY, object, objType, OBJECT_TYPE) {
     if (isFloatEqual(ENEMY[0] * ENEMY_SIZE, (object[0] + object[2]) * OBJECT_WIDTH, 1)) {
-        if (marioPositionYRelativeToObject(ENEMY[1] * ENEMY_SIZE, object)) {
-            if (objType == objectType.barrier) {
+        if (playerPositionYRelativeToObject(ENEMY[1] * ENEMY_SIZE, object)) {
+            if (objType == OBJECT_TYPE.BARRIER) {
                 ENEMY[4] = 0;
                 ENEMY[0] += ENEMY_STEP;
             }
@@ -34,20 +34,20 @@ function enemyLeftScreenCollision(ENEMY) {
     }
 }
 
-function allEnemyCollision(ENEMY, object, objType, objectType) {
+function allEnemyCollision(ENEMY, object, objType, OBJECT_TYPE) {
     for (let j = 0; j < ENEMY.length; j++) {
         enemyLeftScreenCollision(ENEMY[j]);
-        objectOnRightFromEnemy(ENEMY[j], object, objType, objectType);
-        objectOnLeftFromEnemy(ENEMY[j], object, objType, objectType);
+        objectOnRightFromEnemy(ENEMY[j], object, objType, OBJECT_TYPE);
+        objectOnLeftFromEnemy(ENEMY[j], object, objType, OBJECT_TYPE);
     }
 }
 
 function enemyCollisionWithWall() {
     for (const object of BRICK_LEDGE_ONES) {
-        allEnemyCollision(ENEMY, object, objType, objectType);
+        allEnemyCollision(ENEMY, object, objType, OBJECT_TYPE);
     }
     for (const object of BRICK_LEDGE) {
-        allEnemyCollision(ENEMY, object, objType, objectType);
+        allEnemyCollision(ENEMY, object, objType, OBJECT_TYPE);
     }
 }
 

@@ -14,7 +14,6 @@ $vars = [
     'user_id' => $id,
     'end_time' => $endTime,
 ];
-
 $marioScore = getFromSession("marioCounts");
 $luidzhiScore = getFromSession("luidzhiCounts");
 $marioSumScore = getFromSession("marioScore");

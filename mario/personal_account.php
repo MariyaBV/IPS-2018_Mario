@@ -21,7 +21,6 @@ if (isPost()) {
     $oldPassword = $_POST["old_password"] ?? "";
     $newPassword = $_POST["new_password"] ?? "";
     $reapeatPassword = $_POST["reapeat_password"] ?? "";
-    //$registredUsers = dbQueryGetResult(getUserInfoByEmail($email));
     
     dataChange($email, $userName, $userPassword, $oldPassword, $newPassword, $reapeatPassword, $errorCode);
 }

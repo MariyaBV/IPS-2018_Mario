@@ -17,11 +17,17 @@
         margin-right: 20px;
     }
 
+    &__logo
+    {
+        max-height: 180px;
+        position: absolute;
+        top: -15px;
+    }
+
     &__title
     {
         color: $redFont;
         font: 900 60px/66px $mainFont;
-        //margin: 20px auto 40px;
         margin: 0;
         display: inline-block;
         vertical-align: middle;
@@ -71,6 +77,14 @@
     {
         font: 400 18px/24px "Source Sans Pro",sans-serif;
         text-align: right;
+    }
+}
+@media screen and (max-width: 991px) and (min-width: 768px)
+{
+    .b-main-page
+    {
+        margin-bottom: 105px !important;
+    
     }
 }
 
