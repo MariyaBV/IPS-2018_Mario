@@ -12,18 +12,6 @@ const OBJECT_TYPE = {
     ENEMY: 3,
 };
 
-// for (const arr of arrs)
-// {
-//     const [x, y, w, h] = arr;
-//     new DisplayObject({
-//         x,
-//         y,
-//         w,
-//         h,
-//     })
-// }
-
-
 function bottomScreenCollision(playerInfo) {
     const player = playerInfo.player;
     if (player.position.y > 500 - 2 * PLAYER_SIZE) {

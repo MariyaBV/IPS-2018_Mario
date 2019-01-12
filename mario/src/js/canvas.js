@@ -1,5 +1,4 @@
 const canvasWrapper = document.getElementById('canvasWrapper');
-
 const canvas1 = document.getElementById('canvas1');
 const canvas2 = document.getElementById('canvas2');
 
